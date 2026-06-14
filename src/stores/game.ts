@@ -1,15 +1,16 @@
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { useStorage } from "@vueuse/core";
-import { isSameDay } from "date-fns";
+import { isSameDay, subDays } from "date-fns";
 import { i18n } from "@/i18n";
 import { useToast } from "@/composables/useToast";
 import { incrementDups } from "@/utils/array";
 import {
-  EPOCH,
   calculatePoints,
-  getPuzzlesForDate,
+  dateKey,
+  getPuzzleForDate,
   isPangram,
+  loadPuzzles,
 } from "@/utils/puzzle";
 import type { Puzzle } from "@/types/puzzle";
 
@@ -22,28 +23,50 @@ const POINTS_MESSAGES: Record<number, string> = {
   8: "amazing",
 };
 
+/** Found words per puzzle date, e.g. { "2026-06-14": ["mint", "saint"] }. */
+type Progress = Record<string, string[]>;
+
 export const useGameStore = defineStore("game", () => {
   const { t } = i18n.global;
   const toast = useToast();
 
-  // Today's puzzle (persisted so progress survives reloads within the day).
-  const correctGuesses = useStorage("correctGuesses", new Set<string>());
-  const answers = useStorage<string[]>("answers", []);
-  const availableLetters = useStorage("availableLetters", "");
-  const middleLetter = useStorage("middleLetter", "");
-  const gameDate = useStorage("gameDate", EPOCH);
+  const puzzles = ref<Puzzle[]>([]);
+  const isLoaded = ref(false);
+  // The date currently being played (defaults to today; changed for archive).
+  const activeDate = ref<Date>(new Date());
+  // Per-date progress survives reloads and lets users resume any puzzle.
+  const progress = useStorage<Progress>("progress", {});
 
-  // Yesterday's puzzle (shown in the "Yesterday's Answers" dialog).
-  const yesterdayAnswers = useStorage<string[]>("yesterdayAnswers", []);
-  const yesterdayAvailableLetters = useStorage("yesterdayAvailableLetters", "");
-  const yesterdayMiddleLetter = useStorage("yesterdayMiddleLetter", "");
+  const activeKey = computed(() => dateKey(activeDate.value));
+  const isToday = computed(() => isSameDay(activeDate.value, new Date()));
 
-  const correctGuessesList = computed(() => Array.from(correctGuesses.value));
+  const puzzle = computed<Puzzle | null>(() =>
+    puzzles.value.length ? getPuzzleForDate(puzzles.value, activeDate.value) : null,
+  );
+  const previousPuzzle = computed<Puzzle | null>(() =>
+    puzzles.value.length
+      ? getPuzzleForDate(puzzles.value, subDays(activeDate.value, 1))
+      : null,
+  );
+
+  const answers = computed(() => puzzle.value?.answers ?? []);
+  const availableLetters = computed(() => puzzle.value?.availableLetters ?? "");
+  const middleLetter = computed(() => puzzle.value?.middleLetter ?? "");
+
+  const yesterdayAnswers = computed(() => previousPuzzle.value?.answers ?? []);
+  const yesterdayAvailableLetters = computed(
+    () => previousPuzzle.value?.availableLetters ?? "",
+  );
+  const yesterdayMiddleLetter = computed(
+    () => previousPuzzle.value?.middleLetter ?? "",
+  );
+
+  const correctGuessesList = computed(() => progress.value[activeKey.value] ?? []);
+  const gameDateString = computed(() => activeKey.value);
 
   const maxScore = computed(() =>
     answers.value.reduce((acc, word) => acc + calculatePoints(word), 0),
   );
-
   const userScore = computed(() =>
     correctGuessesList.value.reduce(
       (acc, word) => acc + calculatePoints(word),
@@ -65,23 +88,16 @@ export const useGameStore = defineStore("game", () => {
     ].sort((a, b) => a - b);
     const unique = incrementDups(levels);
     const min = Math.min(...unique);
-    // Ensure levels are strictly increasing and the first is always 0.
     return unique.map((level) => level - min);
   });
 
   const progressIndex = computed(
     () => scoreLevels.value.filter((v) => v <= userScore.value).length - 1,
   );
-
   const progressPercentage = computed(
     () => PROGRESS_PERCENTAGES[progressIndex.value] ?? 0,
   );
-
   const isComplete = computed(() => progressPercentage.value === 100);
-
-  const gameDateString = computed(
-    () => gameDate.value.toISOString().split("T")[0],
-  );
 
   function pointsMessage(points: number): string {
     const key = POINTS_MESSAGES[points] ?? "awesome";
@@ -89,58 +105,88 @@ export const useGameStore = defineStore("game", () => {
   }
 
   function submitGuess(guess: string): void {
-    if (guess.length < 4) return toast.show(t("too short"));
-    if (!guess.includes(middleLetter.value)) {
+    const word = guess.toLowerCase();
+    if (word.length < 4) return toast.show(t("too short"));
+    if (!word.includes(middleLetter.value)) {
       return toast.show(t("missing middle letter"));
     }
-    if (!answers.value.includes(guess)) {
+    if (!answers.value.includes(word)) {
       return toast.show(t("not in word list"));
     }
-    if (correctGuesses.value.has(guess)) {
-      return toast.show(t("already found"));
-    }
+    const found = correctGuessesList.value;
+    if (found.includes(word)) return toast.show(t("already found"));
 
-    correctGuesses.value.add(guess);
-    const points = calculatePoints(guess);
-    if (isPangram(guess)) {
+    // Reassign for reactivity + persistence.
+    progress.value = {
+      ...progress.value,
+      [activeKey.value]: [...found, word],
+    };
+
+    const points = calculatePoints(word);
+    if (isPangram(word)) {
       toast.show(`${t("Pangram")}! +${points}`, "success");
     } else {
       toast.show(pointsMessage(points), "success");
     }
   }
 
-  function startGame(puzzles: Puzzle[]): void {
-    const now = new Date();
-
-    // Only reset the player's progress when the day actually changes.
-    if (!isSameDay(gameDate.value, now)) {
-      gameDate.value = now;
-      correctGuesses.value = new Set<string>();
+  /** One-time migration from the older single-game storage layout. */
+  function migrateLegacy(): void {
+    try {
+      if (Object.keys(progress.value).length > 0) return;
+      const rawGuesses = localStorage.getItem("correctGuesses");
+      const rawDate = localStorage.getItem("gameDate");
+      if (rawGuesses && rawDate) {
+        const words = JSON.parse(rawGuesses);
+        const date = new Date(rawDate);
+        if (Array.isArray(words) && words.length && !isNaN(date.getTime())) {
+          progress.value = { ...progress.value, [dateKey(date)]: words };
+        }
+      }
+    } catch {
+      // ignore malformed legacy data
+    } finally {
+      [
+        "correctGuesses",
+        "answers",
+        "availableLetters",
+        "middleLetter",
+        "gameDate",
+        "lastGameDate",
+        "yesterdayAnswers",
+        "yesterdayAvailableLetters",
+        "yesterdayMiddleLetter",
+      ].forEach((key) => localStorage.removeItem(key));
     }
+  }
 
-    // Puzzles are deterministic per date, so always (re)sync today's and
-    // yesterday's data. This keeps things correct after a reload and repairs
-    // any stale/missing values left in localStorage (e.g. from an older build).
-    const { today, yesterday } = getPuzzlesForDate(puzzles, now);
-    answers.value = today.answers;
-    availableLetters.value = today.availableLetters;
-    middleLetter.value = today.middleLetter;
-    yesterdayAnswers.value = yesterday.answers;
-    yesterdayAvailableLetters.value = yesterday.availableLetters;
-    yesterdayMiddleLetter.value = yesterday.middleLetter;
+  async function ensureLoaded(): Promise<void> {
+    if (isLoaded.value) return;
+    migrateLegacy();
+    puzzles.value = await loadPuzzles();
+    isLoaded.value = true;
+  }
+
+  /** Load puzzles (if needed) and switch to the given date. */
+  async function openDate(date: Date): Promise<void> {
+    await ensureLoaded();
+    activeDate.value = date;
   }
 
   return {
-    correctGuesses,
-    correctGuessesList,
+    puzzles,
+    progress,
+    isLoaded,
+    activeDate,
+    isToday,
     answers,
     availableLetters,
     middleLetter,
-    gameDate,
-    gameDateString,
     yesterdayAnswers,
     yesterdayAvailableLetters,
     yesterdayMiddleLetter,
+    correctGuessesList,
+    gameDateString,
     maxScore,
     userScore,
     scoreLevels,
@@ -148,6 +194,7 @@ export const useGameStore = defineStore("game", () => {
     progressPercentage,
     isComplete,
     submitGuess,
-    startGame,
+    ensureLoaded,
+    openDate,
   };
 });

@@ -12,6 +12,7 @@ const year = new Date().getFullYear();
 
       <nav class="footer__links" aria-label="Footer">
         <RouterLink to="/">{{ $t("Game") }}</RouterLink>
+        <RouterLink to="/archive">{{ $t("Archive") }}</RouterLink>
         <RouterLink to="/solver">{{ $t("Blossom Solver") }}</RouterLink>
         <a
           rel="nofollow noopener"

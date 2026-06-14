@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useGameStore } from "@/stores/game";
 import { useThemeStore } from "@/stores/theme";
 import { shuffle } from "@/utils/array";
@@ -9,10 +9,23 @@ const theme = useThemeStore();
 
 const strokeColor = computed(() => (theme.isDark ? "#1c1b22" : "#ffffff"));
 
+function outerOf(letters: string, middle: string): string[] {
+  return letters.split("").filter((l) => l !== middle);
+}
+
 const otherLetters = ref<string[]>(
-  game.availableLetters.split("").filter((l) => l !== game.middleLetter),
+  outerOf(game.availableLetters, game.middleLetter),
 );
 const userGuess = ref("");
+
+// Re-sync the hive when the active puzzle changes (e.g. archive navigation).
+watch(
+  () => game.availableLetters,
+  (letters) => {
+    otherLetters.value = outerOf(letters, game.middleLetter);
+    userGuess.value = "";
+  },
+);
 
 function addLetter(letter: string): void {
   userGuess.value += letter;

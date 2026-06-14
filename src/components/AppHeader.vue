@@ -18,6 +18,7 @@ const theme = useThemeStore();
       </RouterLink>
       <nav class="nav">
         <RouterLink to="/">{{ $t("Game") }}</RouterLink>
+        <RouterLink to="/archive">{{ $t("Archive") }}</RouterLink>
         <RouterLink to="/solver">{{ $t("Blossom Solver") }}</RouterLink>
         <button
           class="theme-toggle"

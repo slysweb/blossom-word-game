@@ -1,6 +1,7 @@
 import type { RouteRecordRaw } from "vue-router";
 import GameView from "@/views/GameView.vue";
 import SolverView from "@/views/SolverView.vue";
+import ArchiveView from "@/views/ArchiveView.vue";
 import type { RouteSeo } from "@/utils/seo";
 import { faqJsonLd } from "@/data/faq";
 
@@ -33,6 +34,34 @@ export const routes: RouteRecordRaw[] = [
         keywords:
           "blossom solver,spelling bee solver,word finder,blossom word game,word game solver,puzzle solver",
         path: "/solver",
+      } satisfies RouteSeo,
+    },
+  },
+  {
+    path: "/play/:date",
+    name: "play",
+    component: GameView,
+    meta: {
+      seo: {
+        title: "Play a past puzzle - Blossom Word Game",
+        description:
+          "Play any past Blossom Word Game puzzle from the archive. Find the words, track your score, and reveal the answers.",
+        path: "/play",
+      } satisfies RouteSeo,
+    },
+  },
+  {
+    path: "/archive",
+    name: "archive",
+    component: ArchiveView,
+    meta: {
+      seo: {
+        title: "Puzzle Archive - Blossom Word Game",
+        description:
+          "Browse and replay every past Blossom Word Game. Pick any day to play that puzzle and reveal the full answer list.",
+        keywords:
+          "blossom word game archive,past puzzles,spelling bee archive,daily word puzzle archive",
+        path: "/archive",
       } satisfies RouteSeo,
     },
   },

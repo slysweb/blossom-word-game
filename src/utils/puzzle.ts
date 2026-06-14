@@ -1,4 +1,4 @@
-import { differenceInDays } from "date-fns";
+import { differenceInDays, format, isValid, parseISO } from "date-fns";
 import type { Puzzle } from "@/types/puzzle";
 
 /**
@@ -26,17 +26,35 @@ export function loadPuzzles(): Promise<Puzzle[]> {
   return puzzlesPromise;
 }
 
-/** Pick today's and yesterday's puzzles for a given date from the full list. */
-export function getPuzzlesForDate(
-  puzzles: Puzzle[],
-  date: Date,
-): { today: Puzzle; yesterday: Puzzle } {
+/** Index into the (circular) puzzle list for a given date. */
+function puzzleIndex(date: Date, len: number): number {
   const daysSinceEpoch = differenceInDays(date, EPOCH);
-  const len = puzzles.length;
   // `% len` makes the sequence circular so we never run out of puzzles.
-  const todayIndex = ((daysSinceEpoch % len) + len) % len;
-  const yesterdayIndex = (((daysSinceEpoch - 1) % len) + len) % len;
-  return { today: puzzles[todayIndex], yesterday: puzzles[yesterdayIndex] };
+  return ((daysSinceEpoch % len) + len) % len;
+}
+
+/** Pick the puzzle for a single date from the full list. */
+export function getPuzzleForDate(puzzles: Puzzle[], date: Date): Puzzle {
+  return puzzles[puzzleIndex(date, puzzles.length)];
+}
+
+/** Stable key (yyyy-MM-dd) used for routing and per-date progress storage. */
+export function dateKey(date: Date): string {
+  return format(date, "yyyy-MM-dd");
+}
+
+/** Parse a yyyy-MM-dd key into a Date, or null if invalid. */
+export function parseDateKey(key: string): Date | null {
+  const date = parseISO(key);
+  return isValid(date) ? date : null;
+}
+
+/** Whether a date is within the playable range: epoch .. today (inclusive). */
+export function isPlayableDate(date: Date): boolean {
+  const today = new Date();
+  return (
+    differenceInDays(date, EPOCH) >= 0 && differenceInDays(today, date) >= 0
+  );
 }
 
 /** A word using all 7 unique letters is a pangram. */
