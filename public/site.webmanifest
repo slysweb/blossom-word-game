@@ -1,0 +1,17 @@
+{
+  "name": "Blossom Word Game",
+  "short_name": "Blossom",
+  "description": "Free daily word hunt puzzle game, just like Spelling Bee.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#fce303",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

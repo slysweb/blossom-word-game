@@ -7,6 +7,8 @@ import ProgressBar from "@/components/ProgressBar.vue";
 import CorrectGuesses from "@/components/CorrectGuesses.vue";
 import YesterdaysAnswers from "@/components/YesterdaysAnswers.vue";
 import GameRules from "@/components/GameRules.vue";
+import HeroSection from "@/components/HeroSection.vue";
+import FaqSection from "@/components/FaqSection.vue";
 import BaseModal from "@/components/BaseModal.vue";
 
 const game = useGameStore();
@@ -37,6 +39,7 @@ watch(
 
 <template>
   <div class="layout">
+    <HeroSection />
     <h2>Blossom Word Game of Today</h2>
 
     <div class="game-card fireworks">
@@ -64,6 +67,7 @@ watch(
     </div>
 
     <GameRules />
+    <FaqSection />
   </div>
 
   <BaseModal v-model="showYesterday" :title="$t('Yesterdays Answers')">

@@ -7,7 +7,15 @@ const theme = useThemeStore();
 <template>
   <header class="header">
     <div class="header__inner layout">
-      <h1>Blossom Word Game</h1>
+      <RouterLink to="/" class="brand" aria-label="Blossom Word Game home">
+        <img
+          src="/logo.png"
+          alt="Blossom Word Game logo"
+          class="brand__logo"
+          width="40"
+          height="40" />
+        <span class="brand__name">Blossom Word Game</span>
+      </RouterLink>
       <nav class="nav">
         <RouterLink to="/">{{ $t("Game") }}</RouterLink>
         <RouterLink to="/solver">{{ $t("Blossom Solver") }}</RouterLink>
@@ -34,6 +42,25 @@ const theme = useThemeStore();
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.brand__logo {
+  width: 40px;
+  height: 40px;
+  display: block;
+}
+
+.brand__name {
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .nav {
@@ -80,6 +107,10 @@ const theme = useThemeStore();
     flex-direction: column;
     gap: 0.75rem;
     text-align: center;
+  }
+
+  .brand__name {
+    font-size: 1.3rem;
   }
 }
 </style>

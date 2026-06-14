@@ -47,7 +47,12 @@ async function findWords(): Promise<void> {
 
 <template>
   <div class="layout">
-    <h2>Blossom Solver</h2>
+    <h1 class="solver-title">Blossom Solver</h1>
+    <p class="solver-intro">
+      A free word finder for the Blossom Word Game and Spelling Bee. Enter the
+      center letter and the six outer letters of any hive, and the solver lists
+      every valid word &mdash; pangrams included.
+    </p>
 
     <div class="solver">
       <div class="inputs">
@@ -73,16 +78,41 @@ async function findWords(): Promise<void> {
       </div>
 
       <div v-if="searched" class="results">
-        <h3 v-if="results.length">
+        <h2 v-if="results.length" class="results-title">
           {{ $t("Found Words") }}: {{ results.length }}
-        </h3>
+        </h2>
         <WordGrid :words="results" :empty-text="$t('No matching puzzle')" />
       </div>
     </div>
+
+    <section class="solver-help">
+      <h2>How the Blossom Solver works</h2>
+      <p>
+        Every Blossom Word Game puzzle uses seven unique letters with one
+        required center letter. The solver matches the letters you enter against
+        the full puzzle list and returns all words that are at least four
+        letters long and contain the center letter. Words shown in bold are
+        pangrams &mdash; they use all seven letters for a big bonus.
+      </p>
+    </section>
   </div>
 </template>
 
 <style scoped lang="scss">
+.solver-title {
+  text-align: center;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.solver-intro {
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
 .solver {
   max-width: 800px;
   margin: 1.5rem auto;
@@ -139,8 +169,26 @@ async function findWords(): Promise<void> {
 .results {
   margin-top: 1.5rem;
 
-  h3 {
+  .results-title {
     color: var(--text);
+    font-size: 1.2rem;
+  }
+}
+
+.solver-help {
+  max-width: 800px;
+  margin: 2.5rem auto 0;
+  text-align: left;
+
+  h2 {
+    text-align: left;
+    color: var(--text);
+    font-size: 1.3rem;
+  }
+
+  p {
+    color: var(--text-muted);
+    line-height: 1.7;
   }
 }
 </style>
