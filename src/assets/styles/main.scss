@@ -125,6 +125,51 @@ button {
   }
 }
 
+// Long-form text pages (about / terms / privacy).
+.prose {
+  max-width: 720px;
+  margin: 0 auto;
+  padding-bottom: 1rem;
+
+  h1 {
+    margin-bottom: 0.25rem;
+    text-align: center;
+  }
+
+  .prose__updated {
+    display: block;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  h2 {
+    text-align: left;
+    font-size: 1.35rem;
+    margin: 2rem 0 0.5rem;
+  }
+
+  p,
+  li {
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  ul {
+    padding-left: 1.25rem;
+  }
+
+  li {
+    margin-bottom: 0.4rem;
+  }
+
+  a {
+    color: var(--primary-dark);
+    font-weight: 600;
+  }
+}
+
 @media (max-width: 768px) {
   h1 {
     font-size: 1.6rem;

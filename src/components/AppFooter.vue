@@ -14,18 +14,9 @@ const year = new Date().getFullYear();
         <RouterLink to="/">{{ $t("Game") }}</RouterLink>
         <RouterLink to="/archive">{{ $t("Archive") }}</RouterLink>
         <RouterLink to="/solver">{{ $t("Blossom Solver") }}</RouterLink>
-        <a
-          rel="nofollow noopener"
-          target="_blank"
-          href="https://github.com/ConorSheehan1/spelling-bee">
-          Spelling Bee
-        </a>
-        <a
-          rel="nofollow noopener"
-          target="_blank"
-          href="https://github.com/en-wl/wordlist/blob/master/alt12dicts/2of4brif.txt">
-          Word list
-        </a>
+        <RouterLink to="/about">{{ $t("About") }}</RouterLink>
+        <RouterLink to="/privacy">{{ $t("Privacy") }}</RouterLink>
+        <RouterLink to="/terms">{{ $t("Terms") }}</RouterLink>
       </nav>
 
       <p class="footer__copy">
