@@ -111,12 +111,16 @@ export const useGameStore = defineStore("game", () => {
 
   function startGame(puzzles: Puzzle[]): void {
     const now = new Date();
-    // Same day: keep current progress.
-    if (isSameDay(gameDate.value, now)) return;
 
-    gameDate.value = now;
-    correctGuesses.value = new Set<string>();
+    // Only reset the player's progress when the day actually changes.
+    if (!isSameDay(gameDate.value, now)) {
+      gameDate.value = now;
+      correctGuesses.value = new Set<string>();
+    }
 
+    // Puzzles are deterministic per date, so always (re)sync today's and
+    // yesterday's data. This keeps things correct after a reload and repairs
+    // any stale/missing values left in localStorage (e.g. from an older build).
     const { today, yesterday } = getPuzzlesForDate(puzzles, now);
     answers.value = today.answers;
     availableLetters.value = today.availableLetters;
