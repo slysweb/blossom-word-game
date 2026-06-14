@@ -1,7 +1,7 @@
 <template>
   <article class="prose layout">
     <h1>Privacy Policy</h1>
-    <span class="prose__updated">Last updated: June 14, 2026</span>
+    <span class="prose__updated">Last updated: June 15, 2026</span>
 
     <p>
       Blossom Word Game is designed to respect your privacy. We do not require
@@ -18,10 +18,32 @@
       time through your browser settings.
     </p>
 
+    <h2>Analytics</h2>
+    <p>
+      We use Google Analytics to understand how visitors use the site (for
+      example, which pages are popular) so we can improve it. Google Analytics
+      sets cookies and may collect information such as your approximate
+      location, device, browser, and pages visited. This data is aggregated and
+      is not used to personally identify you. For more information, see
+      <a
+        rel="nofollow noopener"
+        target="_blank"
+        href="https://policies.google.com/privacy"
+        >Google's Privacy Policy</a
+      >. You can opt out using the
+      <a
+        rel="nofollow noopener"
+        target="_blank"
+        href="https://tools.google.com/dlpage/gaoptout"
+        >Google Analytics Opt-out Browser Add-on</a
+      >.
+    </p>
+
     <h2>Cookies</h2>
     <p>
-      We do not use cookies for tracking or advertising. The local storage
-      described above is used only to remember your own game state.
+      Aside from the analytics cookies described above, we do not use cookies
+      for advertising. Your game state is stored using local storage, not
+      cookies.
     </p>
 
     <h2>Hosting</h2>
