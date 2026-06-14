@@ -109,8 +109,10 @@ export const useGameStore = defineStore("game", () => {
 
   /** A no-spoiler, Wordle-style result string for sharing. */
   const shareText = computed(() => {
-    const filled = Math.round(progressPercentage.value / 10);
-    const bar = "🌸".repeat(filled) + "⬜".repeat(10 - filled);
+    // Bloomed flowers vs buds; show at least one bloom once the player scores.
+    const raw = Math.round(progressPercentage.value / 10);
+    const filled = userScore.value > 0 ? Math.max(1, raw) : raw;
+    const bar = "🌸".repeat(filled) + "🌱".repeat(10 - filled);
     const words = `${correctGuessesList.value.length}/${answers.value.length} ${t("words")}`;
     const pangrams =
       pangramCount.value > 0
