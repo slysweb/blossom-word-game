@@ -1,8 +1,18 @@
-import { createApp } from "vue";
+import { ViteSSG } from "vite-ssg";
 import { createPinia } from "pinia";
 import App from "@/App.vue";
-import router from "@/router";
+import { routes } from "@/router";
 import { i18n } from "@/i18n";
 import "@/assets/styles/main.scss";
 
-createApp(App).use(createPinia()).use(i18n).use(router).mount("#app");
+// ViteSSG prerenders each route to static HTML at build time, then hydrates
+// on the client. Head tags are managed via @unhead/vue so they appear in the
+// prerendered HTML (good for SEO and link previews).
+export const createApp = ViteSSG(
+  App,
+  { routes, scrollBehavior: () => ({ top: 0 }) },
+  ({ app }) => {
+    app.use(createPinia());
+    app.use(i18n);
+  },
+);

@@ -1,12 +1,10 @@
-import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 import GameView from "@/views/GameView.vue";
 import SolverView from "@/views/SolverView.vue";
-import { applySeo } from "@/utils/seo";
 import type { RouteSeo } from "@/utils/seo";
 import { faqJsonLd } from "@/data/faq";
 
-const routes: RouteRecordRaw[] = [
+export const routes: RouteRecordRaw[] = [
   {
     path: "/",
     name: "game",
@@ -40,16 +38,3 @@ const routes: RouteRecordRaw[] = [
   },
   { path: "/:pathMatch(.*)*", redirect: "/" },
 ];
-
-const router = createRouter({
-  history: createWebHistory(),
-  scrollBehavior: () => ({ top: 0 }),
-  routes,
-});
-
-router.afterEach((to) => {
-  const seo = to.meta.seo as RouteSeo | undefined;
-  if (seo) applySeo(seo);
-});
-
-export default router;

@@ -5,73 +5,40 @@ export interface RouteSeo {
   title: string;
   description: string;
   keywords?: string;
-  /** Absolute or root-relative path for the canonical/og url, e.g. "/solver". */
+  /** Root-relative path for the canonical/og url, e.g. "/solver". */
   path: string;
   /** Optional JSON-LD object injected only while this route is active. */
   jsonLd?: object;
 }
 
-const JSON_LD_ID = "route-json-ld";
-
-function setMetaByName(name: string, content: string): void {
-  let tag = document.head.querySelector<HTMLMetaElement>(`meta[name="${name}"]`);
-  if (!tag) {
-    tag = document.createElement("meta");
-    tag.setAttribute("name", name);
-    document.head.appendChild(tag);
-  }
-  tag.setAttribute("content", content);
-}
-
-function setMetaByProperty(property: string, content: string): void {
-  let tag = document.head.querySelector<HTMLMetaElement>(
-    `meta[property="${property}"]`,
-  );
-  if (!tag) {
-    tag = document.createElement("meta");
-    tag.setAttribute("property", property);
-    document.head.appendChild(tag);
-  }
-  tag.setAttribute("content", content);
-}
-
-function setCanonical(url: string): void {
-  let link = document.head.querySelector<HTMLLinkElement>(
-    'link[rel="canonical"]',
-  );
-  if (!link) {
-    link = document.createElement("link");
-    link.setAttribute("rel", "canonical");
-    document.head.appendChild(link);
-  }
-  link.setAttribute("href", url);
-}
-
-function setRouteJsonLd(jsonLd?: object): void {
-  document.getElementById(JSON_LD_ID)?.remove();
-  if (!jsonLd) return;
-  const script = document.createElement("script");
-  script.type = "application/ld+json";
-  script.id = JSON_LD_ID;
-  script.textContent = JSON.stringify(jsonLd);
-  document.head.appendChild(script);
-}
-
-export function applySeo(seo: RouteSeo): void {
+/** Build an @unhead/vue head config from a route's SEO metadata. */
+export function buildHead(seo: RouteSeo) {
   const url = `${SITE_URL}${seo.path}`;
 
-  document.title = seo.title;
-  setMetaByName("description", seo.description);
-  if (seo.keywords) setMetaByName("keywords", seo.keywords);
-  setCanonical(url);
+  const meta = [
+    { name: "description", content: seo.description },
+    { property: "og:type", content: "website" },
+    { property: "og:site_name", content: "Blossom Word Game" },
+    { property: "og:title", content: seo.title },
+    { property: "og:description", content: seo.description },
+    { property: "og:url", content: url },
+    { property: "og:image", content: DEFAULT_OG_IMAGE },
+    { name: "twitter:card", content: "summary" },
+    { name: "twitter:title", content: seo.title },
+    { name: "twitter:description", content: seo.description },
+    { name: "twitter:image", content: DEFAULT_OG_IMAGE },
+  ];
 
-  setMetaByProperty("og:title", seo.title);
-  setMetaByProperty("og:description", seo.description);
-  setMetaByProperty("og:url", url);
-  setMetaByProperty("og:image", DEFAULT_OG_IMAGE);
+  if (seo.keywords) {
+    meta.push({ name: "keywords", content: seo.keywords });
+  }
 
-  setMetaByName("twitter:title", seo.title);
-  setMetaByName("twitter:description", seo.description);
-
-  setRouteJsonLd(seo.jsonLd);
+  return {
+    title: seo.title,
+    meta,
+    link: [{ rel: "canonical", href: url }],
+    script: seo.jsonLd
+      ? [{ type: "application/ld+json", innerHTML: JSON.stringify(seo.jsonLd) }]
+      : [],
+  };
 }
