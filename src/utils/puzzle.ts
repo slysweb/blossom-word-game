@@ -38,6 +38,11 @@ export function getPuzzleForDate(puzzles: Puzzle[], date: Date): Puzzle {
   return puzzles[puzzleIndex(date, puzzles.length)];
 }
 
+/** Sequential puzzle number for a date (#1 = the EPOCH day). */
+export function puzzleNumber(date: Date): number {
+  return differenceInDays(date, EPOCH) + 1;
+}
+
 /** Stable key (yyyy-MM-dd) used for routing and per-date progress storage. */
 export function dateKey(date: Date): string {
   return format(date, "yyyy-MM-dd");

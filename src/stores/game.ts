@@ -11,7 +11,9 @@ import {
   getPuzzleForDate,
   isPangram,
   loadPuzzles,
+  puzzleNumber,
 } from "@/utils/puzzle";
+import { SITE_URL } from "@/utils/seo";
 import type { Puzzle } from "@/types/puzzle";
 
 const PROGRESS_PERCENTAGES = [0, 20, 40, 50, 60, 70, 80, 90, 100];
@@ -98,6 +100,30 @@ export const useGameStore = defineStore("game", () => {
     () => PROGRESS_PERCENTAGES[progressIndex.value] ?? 0,
   );
   const isComplete = computed(() => progressPercentage.value === 100);
+
+  const puzzleNo = computed(() => puzzleNumber(activeDate.value));
+  const rankLabel = computed(() => t(`rank.${progressIndex.value}`));
+  const pangramCount = computed(
+    () => correctGuessesList.value.filter((w) => isPangram(w)).length,
+  );
+
+  /** A no-spoiler, Wordle-style result string for sharing. */
+  const shareText = computed(() => {
+    const filled = Math.round(progressPercentage.value / 10);
+    const bar = "🌸".repeat(filled) + "⬜".repeat(10 - filled);
+    const words = `${correctGuessesList.value.length}/${answers.value.length} ${t("words")}`;
+    const pangrams =
+      pangramCount.value > 0
+        ? ` · ${pangramCount.value} ${t("pangrams", pangramCount.value)}`
+        : "";
+    const link = isToday.value ? SITE_URL : `${SITE_URL}/play/${activeKey.value}`;
+    return [
+      `🌸 Blossom Word Game #${puzzleNo.value}`,
+      `${bar} ${rankLabel.value}`,
+      `${words}${pangrams} · ${userScore.value} ${t("pts")}`,
+      link,
+    ].join("\n");
+  });
 
   function pointsMessage(points: number): string {
     const key = POINTS_MESSAGES[points] ?? "awesome";
@@ -193,6 +219,10 @@ export const useGameStore = defineStore("game", () => {
     progressIndex,
     progressPercentage,
     isComplete,
+    puzzleNo,
+    rankLabel,
+    pangramCount,
+    shareText,
     submitGuess,
     ensureLoaded,
     openDate,

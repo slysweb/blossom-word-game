@@ -12,6 +12,7 @@ import GameRules from "@/components/GameRules.vue";
 import HeroSection from "@/components/HeroSection.vue";
 import FaqSection from "@/components/FaqSection.vue";
 import BaseModal from "@/components/BaseModal.vue";
+import ShareButton from "@/components/ShareButton.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -86,7 +87,7 @@ watch(
 
       <template v-else>
         <div class="game-card__top">
-          <span>{{ game.gameDateString }}</span>
+          <span>#{{ game.puzzleNo }} · {{ game.gameDateString }}</span>
           <span class="yesterday-link" @click="showYesterday = true">
             👁 {{ $t("Yesterday") }} {{ $t("Answer") }}
           </span>
@@ -97,6 +98,10 @@ watch(
         <div class="game-result">
           <ProgressBar />
           <CorrectGuesses />
+
+          <div v-if="game.userScore > 0" class="share-row">
+            <ShareButton />
+          </div>
 
           <div v-if="isArchive" class="reveal">
             <button class="reveal__btn" @click="showAnswers = !showAnswers">
@@ -126,6 +131,9 @@ watch(
     :title="$t('Congratulations')"
     @closed="wonDismissed = true">
     <h2>{{ $t("GeniusMessage") }}</h2>
+    <div class="won-share">
+      <ShareButton />
+    </div>
   </BaseModal>
 </template>
 
@@ -204,6 +212,16 @@ watch(
 .game-result {
   max-width: 800px;
   margin: 0 auto;
+}
+
+.share-row {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.won-share {
+  margin-top: 1rem;
+  text-align: center;
 }
 
 .reveal {
