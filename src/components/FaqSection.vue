@@ -4,7 +4,7 @@ import { faqs } from "@/data/faq";
 
 <template>
   <section class="faq layout" aria-labelledby="faq-heading">
-    <h2 id="faq-heading">Frequently Asked Questions</h2>
+    <h2 id="faq-heading" class="section-heading">Frequently Asked Questions</h2>
     <details v-for="(item, index) in faqs" :key="index" class="faq__item">
       <summary>{{ item.question }}</summary>
       <p>{{ item.answer }}</p>
@@ -25,10 +25,16 @@ h2 {
 
 .faq__item {
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   margin-bottom: 0.6rem;
   background: var(--surface);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: var(--primary);
+  }
 
   summary {
     cursor: pointer;

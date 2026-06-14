@@ -27,20 +27,32 @@ const sorted = computed(() => [...props.words].sort());
   list-style: none;
   margin: 1rem 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.4rem 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
 
   li {
-    padding: 0.35rem 0.25rem;
-    border-bottom: 1px solid var(--border);
+    padding: 0.35rem 0.8rem;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.95rem;
     text-transform: capitalize;
     color: var(--text);
+    transition: transform 0.12s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
   }
 
   .pangram {
-    font-weight: 700;
-    color: var(--primary);
+    font-weight: 800;
+    color: #1a1a22;
+    background: var(--primary);
+    border-color: var(--primary);
   }
 }
 
@@ -48,10 +60,5 @@ const sorted = computed(() => [...props.words].sort());
   color: var(--text-muted);
   text-align: center;
   padding: 1rem 0;
-}
-
-html:not(.dark) .word-grid .pangram {
-  color: #000;
-  border-bottom-color: var(--primary);
 }
 </style>

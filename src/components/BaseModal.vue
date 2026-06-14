@@ -70,8 +70,8 @@ watch(
   max-width: 600px;
   background: var(--surface);
   color: var(--text);
-  border-radius: 10px;
-  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
   margin: auto;
 }
 

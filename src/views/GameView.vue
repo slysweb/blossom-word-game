@@ -89,26 +89,44 @@ watch(
   position: relative;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-  margin: 1rem auto;
-  padding: 1rem;
-  max-width: 760px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  margin: 1rem auto 0;
+  padding: 1.25rem 1.25rem 1.75rem;
+  max-width: 720px;
 }
 
 .game-card__top {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.game-card__top > span:first-child {
+  font-weight: 700;
   color: var(--text-muted);
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
 }
 
 .yesterday-link {
   cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
   color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  transition: all 0.2s ease;
 
   &:hover {
     color: var(--text);
+    border-color: var(--primary);
+    background: var(--primary-soft);
   }
 }
 

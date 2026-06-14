@@ -91,7 +91,8 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
       <button
         class="action action--icon"
         :aria-label="$t('Shuffle')"
-        @click="shuffleLetters">
+        @click="shuffleLetters"
+        type="button">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round"
           stroke-linejoin="round">
@@ -102,7 +103,7 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
           <path d="M4 4l5 5" />
         </svg>
       </button>
-      <button class="action action--text" @click="submit">
+      <button class="action action--text action--primary" @click="submit">
         {{ $t("Enter") }}
       </button>
     </div>
@@ -110,6 +111,7 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
 </template>
 
 <style scoped lang="scss">
+@use "sass:color";
 @use "@/assets/styles/variables" as *;
 
 .hive-controls {
@@ -118,15 +120,17 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
 }
 
 .user-guess {
+  font-family: var(--font-display);
   text-transform: uppercase;
   margin-bottom: 10px;
-  height: 35px;
-  font-weight: 700;
-  font-size: 25px;
+  height: 38px;
+  font-weight: 600;
+  font-size: 27px;
+  letter-spacing: 0.04em;
   color: var(--text);
 
   .is-middle {
-    color: $bl-yellow;
+    color: var(--primary-dark);
   }
 }
 
@@ -142,12 +146,17 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
   left: 30%;
   width: 40%;
   height: calc(100% / 3);
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.12));
+  cursor: pointer;
 
   .cell-fill {
-    cursor: pointer;
     fill: var(--cell);
-    transition: all 100ms;
+    transition: all 120ms ease;
     transform-origin: 50% 50%;
+  }
+
+  &:hover .cell-fill {
+    fill: color.adjust($bl-grey, $lightness: -6%);
   }
 
   &:active .cell-fill {
@@ -156,16 +165,21 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
 }
 
 .cell-letter {
-  font-weight: 700;
-  font-size: 30px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 32px;
   text-anchor: middle;
   text-transform: uppercase;
   pointer-events: none;
-  fill: #000;
+  fill: #1a1a22;
 }
 
 .hive-cell.center .cell-fill {
   fill: $bl-yellow;
+}
+
+.hive-cell.center:hover .cell-fill {
+  fill: color.adjust($bl-yellow, $lightness: -4%);
 }
 
 .hive-cell:nth-child(1) {
@@ -198,18 +212,25 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
 }
 
 .action {
-  padding: 14px;
+  padding: 13px;
   background: var(--surface);
-  font-size: 18px;
+  font-size: 17px;
+  font-weight: 700;
   color: var(--text);
   border: 1px solid var(--border-strong);
-  border-radius: 40px;
+  border-radius: 999px;
   user-select: none;
-  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: var(--primary);
+    transform: translateY(-1px);
+  }
 
   &:active {
-    box-shadow: 0 5px var(--cell);
-    transform: translateY(4px);
+    box-shadow: 0 3px var(--cell);
+    transform: translateY(3px);
   }
 }
 
@@ -223,6 +244,17 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
   }
   &:last-child {
     margin-right: 0;
+  }
+}
+
+.action--primary {
+  background: var(--primary);
+  color: #1a1a22;
+  border-color: var(--primary);
+
+  &:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
   }
 }
 

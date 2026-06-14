@@ -32,7 +32,12 @@ const theme = useThemeStore();
 
 <style scoped lang="scss">
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 500;
   background: var(--header-bg);
+  backdrop-filter: saturate(160%) blur(12px);
+  -webkit-backdrop-filter: saturate(160%) blur(12px);
   border-bottom: 1px solid var(--border);
   margin-bottom: 2rem;
 }
@@ -41,7 +46,7 @@ const theme = useThemeStore();
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
+  padding: 0.55rem 1rem;
 }
 
 .brand {
@@ -56,11 +61,13 @@ const theme = useThemeStore();
   width: 40px;
   height: 40px;
   display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.12));
 }
 
 .brand__name {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 600;
 }
 
 .nav {
@@ -72,33 +79,37 @@ const theme = useThemeStore();
 .nav a {
   color: var(--text);
   text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-weight: 500;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
   transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(127, 127, 127, 0.15);
+    background: var(--primary-soft);
     transform: translateY(-1px);
   }
 
   &.router-link-exact-active {
     color: #000;
     background: var(--primary);
+    box-shadow: 0 2px 8px var(--primary-soft);
   }
 }
 
 .theme-toggle {
-  width: 44px;
-  height: 44px;
-  background: none;
-  border: none;
-  border-radius: 4px;
-  font-size: 20px;
+  width: 42px;
+  height: 42px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 18px;
   line-height: 1;
+  transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(127, 127, 127, 0.15);
+    border-color: var(--primary);
+    transform: translateY(-1px);
   }
 }
 

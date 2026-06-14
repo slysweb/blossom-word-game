@@ -1,6 +1,6 @@
 <template>
   <section class="rules layout">
-    <h2>How to play Blossom Word Game</h2>
+    <h2 class="section-heading">How to play Blossom Word Game</h2>
     <p>
       Blossom Word Game is a word hunt puzzle, just like Spelling Bee. Each day
       you get a hive of seven letters and your goal is to combine them into as

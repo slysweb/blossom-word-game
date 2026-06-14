@@ -86,7 +86,7 @@ async function findWords(): Promise<void> {
     </div>
 
     <section class="solver-help">
-      <h2>How the Blossom Solver works</h2>
+      <h2 class="section-heading">How the Blossom Solver works</h2>
       <p>
         Every Blossom Word Game puzzle uses seven unique letters with one
         required center letter. The solver matches the letters you enter against
@@ -122,10 +122,11 @@ async function findWords(): Promise<void> {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 1.25rem;
+  padding: 1.5rem;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
 .field {
@@ -137,28 +138,38 @@ async function findWords(): Promise<void> {
 }
 
 .field input {
-  padding: 0.6rem 0.75rem;
+  padding: 0.65rem 0.85rem;
   font-size: 1rem;
+  font-family: inherit;
   text-transform: lowercase;
   border: 1px solid var(--border-strong);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: var(--bg);
   color: var(--text);
+  transition: all 0.15s ease;
 
   &:focus {
     outline: none;
     border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-soft);
   }
 }
 
 .solve {
-  padding: 0.7rem 1rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #000;
+  padding: 0.8rem 1rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #1a1a22;
   background: var(--primary);
   border: none;
-  border-radius: 6px;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px var(--primary-soft);
+  transition: all 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+  }
 
   &:disabled {
     opacity: 0.5;

@@ -1,31 +1,47 @@
 @use "variables" as *;
 
 :root {
+  --font-display: "Fredoka", "Nunito", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+
   --primary: #{$bl-yellow};
+  --primary-dark: #e0ca00;
+  --primary-soft: rgba(252, 227, 3, 0.18);
   --cell: #{$bl-grey};
-  --bg: #ffffff;
+
+  --bg: #fffef8;
   --surface: #ffffff;
-  --surface-alt: #f8f9fa;
-  --header-bg: #f8f9fa;
-  --border: rgba(0, 0, 0, 0.1);
-  --border-strong: rgba(0, 0, 0, 0.15);
-  --text: #2c3e50;
-  --text-muted: #666;
-  --shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  --overlay: rgba(0, 0, 0, 0.45);
+  --surface-alt: #fbfaf3;
+  --header-bg: rgba(255, 255, 255, 0.8);
+  --border: rgba(20, 20, 30, 0.08);
+  --border-strong: rgba(20, 20, 30, 0.16);
+  --text: #23232b;
+  --text-muted: #6b6b76;
+
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow-sm: 0 1px 3px rgba(20, 20, 40, 0.06);
+  --shadow: 0 8px 28px rgba(20, 20, 40, 0.08);
+  --shadow-lg: 0 18px 48px rgba(20, 20, 40, 0.12);
+  --overlay: rgba(15, 15, 25, 0.5);
 }
 
 html.dark {
+  --primary-soft: rgba(252, 227, 3, 0.12);
   --cell: #3a3a44;
-  --bg: #{$bl-dark-bg};
+
+  --bg: #1a191f;
   --surface: #26252e;
-  --surface-alt: #1a1a1a;
-  --header-bg: #1a1a1a;
+  --surface-alt: #201f27;
+  --header-bg: rgba(26, 25, 31, 0.8);
   --border: rgba(255, 255, 255, 0.1);
-  --border-strong: rgba(255, 255, 255, 0.18);
-  --text: rgba(255, 255, 255, 0.9);
-  --text-muted: #bebebe;
-  --shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.4);
+  --border-strong: rgba(255, 255, 255, 0.2);
+  --text: rgba(255, 255, 255, 0.92);
+  --text-muted: #a3a3ad;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.55);
   --overlay: rgba(0, 0, 0, 0.6);
 }
 
@@ -36,7 +52,6 @@ html.dark {
 }
 
 html {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -44,27 +59,40 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background: var(--bg);
+  min-height: 100vh;
+  font-family: var(--font-body);
   color: var(--text);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 12% -5%, var(--primary-soft), transparent 38%),
+    radial-gradient(circle at 88% 4%, var(--primary-soft), transparent 34%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
 }
 
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
 h1 {
   margin: 0;
-  font-size: 1.8rem;
-  color: var(--text);
+  font-size: 2rem;
 }
 
 h2 {
   text-align: center;
   font-size: 1.5rem;
-  color: var(--text-muted);
 }
 
 a {
-  color: var(--primary);
+  color: var(--primary-dark);
 }
 
 .layout {
@@ -78,11 +106,30 @@ button {
   cursor: pointer;
 }
 
+// Accent underline for section headings.
+.section-heading {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.35rem;
+  margin-bottom: 0.75rem;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 2.5rem;
+    height: 4px;
+    border-radius: 4px;
+    background: var(--primary);
+  }
+}
+
 @media (max-width: 768px) {
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
   h2 {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
   }
 }
