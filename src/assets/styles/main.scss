@@ -1,0 +1,88 @@
+@use "variables" as *;
+
+:root {
+  --primary: #{$bl-yellow};
+  --cell: #{$bl-grey};
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-alt: #f8f9fa;
+  --header-bg: #f8f9fa;
+  --border: rgba(0, 0, 0, 0.1);
+  --border-strong: rgba(0, 0, 0, 0.15);
+  --text: #2c3e50;
+  --text-muted: #666;
+  --shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  --overlay: rgba(0, 0, 0, 0.45);
+}
+
+html.dark {
+  --cell: #3a3a44;
+  --bg: #{$bl-dark-bg};
+  --surface: #26252e;
+  --surface-alt: #1a1a1a;
+  --header-bg: #1a1a1a;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --text: rgba(255, 255, 255, 0.9);
+  --text-muted: #bebebe;
+  --shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.4);
+  --overlay: rgba(0, 0, 0, 0.6);
+}
+
+* {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: var(--text);
+}
+
+h2 {
+  text-align: center;
+  font-size: 1.5rem;
+  color: var(--text-muted);
+}
+
+a {
+  color: var(--primary);
+}
+
+.layout {
+  max-width: $max-width;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+  h2 {
+    font-size: 1.2rem;
+  }
+}

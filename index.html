@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Blossom word game online for free. Every day a new word hunt puzzle game." />
+    <meta
+      name="keywords"
+      content="blossom word game,spelling bee,blossom word,word game,puzzle game" />
+    <link rel="canonical" href="https://blossomwordgame.com" />
+    <title>Blossom Word Game</title>
+    <script>
+      // Apply the persisted theme before paint to avoid a flash of the wrong theme.
+      (function () {
+        try {
+          if (localStorage.getItem("theme") === "dark") {
+            document.documentElement.classList.add("dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

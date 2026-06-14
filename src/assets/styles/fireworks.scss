@@ -1,0 +1,75 @@
+// Firework burst animation, adapted from https://codepen.io/hmaw/pen/qBEMLxV
+@use "sass:math";
+
+$particles: 50;
+$width: 500;
+$height: 500;
+
+$box-shadow: ();
+$box-shadow2: ();
+@for $i from 0 through $particles {
+  $x: math.random($width) - math.div($width, 2);
+  $y: math.random($height) - math.div($height, 1.2);
+  $hue: math.random(360);
+  $box-shadow: $box-shadow, (#{$x}px #{$y}px hsl($hue, 100%, 50%));
+  $box-shadow2: $box-shadow2, (0 0 #fff);
+}
+
+.fireworks > .before,
+.fireworks > .after {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  box-shadow: $box-shadow2;
+  animation:
+    1s bang ease-out infinite backwards,
+    1s gravity ease-in infinite backwards,
+    5s position linear infinite backwards;
+}
+
+.fireworks > .after {
+  animation-delay: 1.25s, 1.25s, 1.25s;
+  animation-duration: 1.25s, 1.25s, 6.25s;
+}
+
+@keyframes bang {
+  to {
+    box-shadow: $box-shadow;
+  }
+}
+
+@keyframes gravity {
+  to {
+    transform: translateY(200px);
+    opacity: 0;
+  }
+}
+
+@keyframes position {
+  0%,
+  19.9% {
+    margin-top: 10%;
+    margin-left: 40%;
+  }
+  20%,
+  39.9% {
+    margin-top: 40%;
+    margin-left: 30%;
+  }
+  40%,
+  59.9% {
+    margin-top: 20%;
+    margin-left: 70%;
+  }
+  60%,
+  79.9% {
+    margin-top: 30%;
+    margin-left: 20%;
+  }
+  80%,
+  99.9% {
+    margin-top: 30%;
+    margin-left: 80%;
+  }
+}
