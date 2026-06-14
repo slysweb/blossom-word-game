@@ -10,20 +10,18 @@ const { t } = useI18n();
 
 const copied = ref(false);
 
-async function share(): Promise<void> {
-  const text = game.shareText;
+/** Touch/phone devices benefit from the native share sheet; desktop prefers copy. */
+function isMobileDevice(): boolean {
+  if (typeof navigator === "undefined") return false;
+  if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) return true;
+  return (
+    navigator.maxTouchPoints > 0 &&
+    typeof matchMedia !== "undefined" &&
+    matchMedia("(pointer: coarse)").matches
+  );
+}
 
-  // Prefer the native share sheet (great on mobile); fall back to clipboard.
-  if (typeof navigator !== "undefined" && navigator.share) {
-    try {
-      await navigator.share({ title: "Blossom Word Game", text });
-      return;
-    } catch (err) {
-      // User dismissed the share sheet - don't treat as an error.
-      if (err instanceof DOMException && err.name === "AbortError") return;
-    }
-  }
-
+async function copyToClipboard(text: string): Promise<void> {
   try {
     await navigator.clipboard.writeText(text);
     copied.value = true;
@@ -32,6 +30,23 @@ async function share(): Promise<void> {
   } catch {
     toast.show(text);
   }
+}
+
+async function share(): Promise<void> {
+  const text = game.shareText;
+
+  // Native share sheet on mobile; straight clipboard copy on desktop.
+  if (isMobileDevice() && navigator.share) {
+    try {
+      await navigator.share({ title: "Blossom Word Game", text });
+      return;
+    } catch (err) {
+      // User dismissed the share sheet - don't fall through to copy.
+      if (err instanceof DOMException && err.name === "AbortError") return;
+    }
+  }
+
+  await copyToClipboard(text);
 }
 </script>
 
