@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://blossomwordgame.com/</loc>
+    <loc>https://blossomword.com/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://blossomwordgame.com/archive</loc>
+    <loc>https://blossomword.com/archive</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://blossomwordgame.com/solver</loc>
+    <loc>https://blossomword.com/solver</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://blossomwordgame.com/about</loc>
+    <loc>https://blossomword.com/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://blossomwordgame.com/privacy</loc>
+    <loc>https://blossomword.com/privacy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://blossomwordgame.com/terms</loc>
+    <loc>https://blossomword.com/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

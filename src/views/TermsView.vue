@@ -59,7 +59,7 @@
     <h2>Contact</h2>
     <p>
       Questions about these Terms? Email
-      <a href="mailto:support@blossomwordgame.com">support@blossomwordgame.com</a>.
+      <a href="mailto:support@blossomword.com">support@blossomword.com</a>.
     </p>
   </article>
 </template>

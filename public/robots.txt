@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://blossomwordgame.com/sitemap.xml
+Sitemap: https://blossomword.com/sitemap.xml
