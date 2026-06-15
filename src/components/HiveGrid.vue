@@ -68,6 +68,7 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
           :class="{ 'is-middle': letter === game.middleLetter }">
           {{ letter }}
         </span>
+        <span class="user-guess__caret" aria-hidden="true" />
       </template>
     </div>
 
@@ -163,6 +164,28 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
   letter-spacing: normal;
   color: var(--text-muted);
   opacity: 0.7;
+}
+
+.user-guess__caret {
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  margin-left: 1px;
+  vertical-align: -0.12em;
+  background: var(--primary-dark);
+  border-radius: 2px;
+  animation: caret-blink 1.05s steps(1, end) infinite;
+}
+
+@keyframes caret-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
 }
 
 .hive {
