@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { loadPuzzles } from "@/utils/puzzle";
+import { loadWordList, solveHive } from "@/utils/puzzle";
 import WordGrid from "@/components/WordGrid.vue";
 
 const centerLetter = ref("");
 const outerLetters = ref("");
 const results = ref<string[]>([]);
 const searched = ref(false);
+const loading = ref(false);
 
 const isValid = computed(
   () =>
@@ -29,19 +30,18 @@ function onOuterInput(): void {
 
 async function findWords(): Promise<void> {
   if (!isValid.value) return;
-  const center = centerLetter.value;
-  const inputLetters = new Set(center + outerLetters.value);
-
-  const puzzles = await loadPuzzles();
-  const match = puzzles.find((puzzle) => {
-    if (puzzle.middleLetter !== center) return false;
-    if (puzzle.availableLetters.length !== inputLetters.size) return false;
-    const puzzleLetters = new Set(puzzle.availableLetters);
-    return [...inputLetters].every((letter) => puzzleLetters.has(letter));
-  });
-
-  results.value = match ? match.answers : [];
-  searched.value = true;
+  loading.value = true;
+  try {
+    const words = await loadWordList();
+    results.value = solveHive(
+      words,
+      centerLetter.value,
+      centerLetter.value + outerLetters.value,
+    );
+    searched.value = true;
+  } finally {
+    loading.value = false;
+  }
 }
 </script>
 
@@ -49,9 +49,10 @@ async function findWords(): Promise<void> {
   <div class="layout">
     <h1 class="solver-title">Blossom Solver</h1>
     <p class="solver-intro">
-      A free word finder for the Blossom Word Game and Spelling Bee. Enter the
-      center letter and the six outer letters of any hive, and the solver lists
-      every valid word &mdash; pangrams included.
+      A free word finder for any 7-letter hive &mdash; Blossom Word Game, NYT
+      Spelling Bee, or the Merriam-Webster Blossom. Enter the center letter and
+      the six outer letters, and the solver lists every valid word &mdash;
+      pangrams included.
     </p>
 
     <div class="solver">
@@ -72,8 +73,8 @@ async function findWords(): Promise<void> {
             :placeholder="$t('6 letters')"
             @input="onOuterInput" />
         </label>
-        <button class="solve" :disabled="!isValid" @click="findWords">
-          {{ $t("Find Words") }}
+        <button class="solve" :disabled="!isValid || loading" @click="findWords">
+          {{ loading ? "…" : $t("Find Words") }}
         </button>
       </div>
 
@@ -81,18 +82,24 @@ async function findWords(): Promise<void> {
         <h2 v-if="results.length" class="results-title">
           {{ $t("Found Words") }}: {{ results.length }}
         </h2>
-        <WordGrid :words="results" :empty-text="$t('No matching puzzle')" />
+        <WordGrid :words="results" :empty-text="$t('No words found')" />
       </div>
     </div>
 
     <section class="solver-help">
       <h2 class="section-heading">How the Blossom Solver works</h2>
       <p>
-        Every Blossom Word Game puzzle uses seven unique letters with one
-        required center letter. The solver matches the letters you enter against
-        the full puzzle list and returns all words that are at least four
-        letters long and contain the center letter. Words shown in bold are
-        pangrams &mdash; they use all seven letters for a big bonus.
+        A hive uses seven unique letters with one required center letter. Enter
+        them above and the solver returns every word that is at least four
+        letters long, contains the center letter, and uses only those seven
+        letters. Words shown in bold are pangrams &mdash; they use all seven
+        letters for a big bonus.
+      </p>
+      <p class="solver-note">
+        <strong>Note:</strong> results come from our own word list. Other games
+        such as the NYT Spelling Bee and the Merriam-Webster Blossom use
+        different dictionaries, so a word we list may not be accepted there (and
+        vice versa).
       </p>
     </section>
   </div>
@@ -200,6 +207,19 @@ async function findWords(): Promise<void> {
   p {
     color: var(--text-muted);
     line-height: 1.7;
+  }
+}
+
+.solver-note {
+  margin-top: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+
+  strong {
+    color: var(--text);
   }
 }
 </style>

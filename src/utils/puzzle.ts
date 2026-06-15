@@ -19,8 +19,10 @@ const EPOCH_UTC = Date.UTC(2022, 0, 1);
 const DAY_MS = 86_400_000;
 
 const DATA_URL = "/data/allAnswers.json";
+const WORDS_URL = "/data/words.txt";
 
 let puzzlesPromise: Promise<Puzzle[]> | null = null;
+let wordsPromise: Promise<string[]> | null = null;
 
 /** Fetch and memoize the full puzzle list (served as a static asset). */
 export function loadPuzzles(): Promise<Puzzle[]> {
@@ -34,6 +36,42 @@ export function loadPuzzles(): Promise<Puzzle[]> {
     });
   }
   return puzzlesPromise;
+}
+
+/**
+ * Fetch and memoize the flat dictionary used by the solver. This is a compact
+ * (~220KB) newline-separated word list, far lighter than the full puzzle data.
+ */
+export function loadWordList(): Promise<string[]> {
+  if (!wordsPromise) {
+    wordsPromise = fetch(WORDS_URL)
+      .then((res) => {
+        if (!res.ok) throw new Error(`Failed to load words: ${res.status}`);
+        return res.text();
+      })
+      .then((text) => text.split("\n").filter(Boolean))
+      .catch((err) => {
+        wordsPromise = null;
+        throw err;
+      });
+  }
+  return wordsPromise;
+}
+
+/** Solve any hive: words >= 4 letters, containing the center, using only the allowed set. */
+export function solveHive(
+  words: string[],
+  center: string,
+  letters: Iterable<string>,
+): string[] {
+  const allowed = new Set(letters);
+  allowed.add(center);
+  return words.filter(
+    (word) =>
+      word.length >= 4 &&
+      word.includes(center) &&
+      [...word].every((char) => allowed.has(char)),
+  );
 }
 
 /**

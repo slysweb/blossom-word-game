@@ -6,6 +6,7 @@
   "description": "Blossom Word Game - a free daily word hunt puzzle game inspired by Spelling Bee.",
   "scripts": {
     "dev": "vite",
+    "build:words": "node scripts/build-words.mjs",
     "build": "vue-tsc -b && vite-ssg build",
     "preview": "vite preview",
     "type-check": "vue-tsc -b --noEmit",
