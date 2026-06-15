@@ -11,6 +11,7 @@
   "Delete": "Delete",
   "Enter": "Enter",
   "Shuffle": "Shuffle",
+  "Type or click": "Type or click",
   "Ranking": "Ranking",
   "RankMSG": "Ranks are based on a percentage of possible points in a puzzle. The minimum scores to reach each rank for today's puzzle are",
   "foundWords": "You have found 0 words | You have found 1 word | You have found {n} words",

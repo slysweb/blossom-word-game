@@ -60,12 +60,15 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
 <template>
   <div class="hive-controls">
     <div class="user-guess">
-      <span
-        v-for="(letter, index) in userGuess"
-        :key="`guess-${index}`"
-        :class="{ 'is-middle': letter === game.middleLetter }">
-        {{ letter }}
-      </span>
+      <span v-if="!userGuess" class="user-guess__hint">{{ $t("Type or click") }}</span>
+      <template v-else>
+        <span
+          v-for="(letter, index) in userGuess"
+          :key="`guess-${index}`"
+          :class="{ 'is-middle': letter === game.middleLetter }">
+          {{ letter }}
+        </span>
+      </template>
     </div>
 
     <div class="hive">
@@ -130,11 +133,16 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
 .hive-controls {
   max-width: 290px;
   margin: 25px auto;
+  // Prevent the text caret / selection highlight anywhere in the puzzle area.
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: default;
 }
 
 .user-guess {
   font-family: var(--font-display);
   text-transform: uppercase;
+  text-align: center;
   margin-bottom: 10px;
   height: 38px;
   font-weight: 600;
@@ -145,6 +153,16 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
   .is-middle {
     color: var(--primary-dark);
   }
+}
+
+.user-guess__hint {
+  font-family: var(--font-body);
+  text-transform: none;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: normal;
+  color: var(--text-muted);
+  opacity: 0.7;
 }
 
 .hive {
