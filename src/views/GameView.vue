@@ -2,7 +2,7 @@
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useGameStore } from "@/stores/game";
-import { isPlayableDate, parseDateKey } from "@/utils/puzzle";
+import { getToday, isPlayableDate, parseDateKey } from "@/utils/puzzle";
 import HiveGrid from "@/components/HiveGrid.vue";
 import ProgressBar from "@/components/ProgressBar.vue";
 import CorrectGuesses from "@/components/CorrectGuesses.vue";
@@ -37,7 +37,7 @@ async function load(): Promise<void> {
   wonDismissed.value = false;
 
   try {
-    let date = new Date();
+    let date = getToday();
     if (isArchive.value) {
       const parsed = parseDateKey(route.params.date as string);
       if (!parsed || !isPlayableDate(parsed)) {

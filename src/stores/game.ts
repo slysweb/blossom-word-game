@@ -1,7 +1,7 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { useStorage } from "@vueuse/core";
-import { isSameDay, subDays } from "date-fns";
+import { subDays } from "date-fns";
 import { i18n } from "@/i18n";
 import { useToast } from "@/composables/useToast";
 import { incrementDups } from "@/utils/array";
@@ -9,6 +9,8 @@ import {
   calculatePoints,
   dateKey,
   getPuzzleForDate,
+  getToday,
+  getTodayKey,
   isPangram,
   loadPuzzles,
   puzzleNumber,
@@ -35,12 +37,12 @@ export const useGameStore = defineStore("game", () => {
   const puzzles = ref<Puzzle[]>([]);
   const isLoaded = ref(false);
   // The date currently being played (defaults to today; changed for archive).
-  const activeDate = ref<Date>(new Date());
+  const activeDate = ref<Date>(getToday());
   // Per-date progress survives reloads and lets users resume any puzzle.
   const progress = useStorage<Progress>("progress", {});
 
   const activeKey = computed(() => dateKey(activeDate.value));
-  const isToday = computed(() => isSameDay(activeDate.value, new Date()));
+  const isToday = computed(() => activeKey.value === getTodayKey());
 
   const puzzle = computed<Puzzle | null>(() =>
     puzzles.value.length ? getPuzzleForDate(puzzles.value, activeDate.value) : null,

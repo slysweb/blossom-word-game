@@ -11,14 +11,14 @@ import {
   subMonths,
 } from "date-fns";
 import { useGameStore } from "@/stores/game";
-import { EPOCH, dateKey, getPuzzleForDate } from "@/utils/puzzle";
+import { EPOCH, dateKey, getPuzzleForDate, getToday } from "@/utils/puzzle";
 
 const game = useGameStore();
 const ready = ref(false);
-const viewMonth = ref(startOfMonth(new Date()));
+const viewMonth = ref(startOfMonth(getToday()));
 
 const minMonth = startOfMonth(EPOCH);
-const maxMonth = startOfMonth(new Date());
+const maxMonth = startOfMonth(getToday());
 
 const canPrev = computed(() => isAfter(viewMonth.value, minMonth));
 const canNext = computed(() => isBefore(viewMonth.value, maxMonth));
@@ -39,7 +39,7 @@ const days = computed<DayEntry[]>(() => {
   if (!game.puzzles.length) return [];
   const start = startOfMonth(viewMonth.value);
   const monthEnd = endOfMonth(viewMonth.value);
-  const today = new Date();
+  const today = getToday();
   const from = isBefore(start, EPOCH) ? EPOCH : start;
   const to = isAfter(monthEnd, today) ? today : monthEnd;
   if (isAfter(from, to)) return [];
