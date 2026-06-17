@@ -59,8 +59,11 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
 
 <template>
   <div class="hive-controls">
-    <div class="user-guess">
-      <span v-if="!userGuess" class="user-guess__hint">{{ $t("Type or click") }}</span>
+    <div class="user-guess" :class="{ 'user-guess--empty': !userGuess }">
+      <template v-if="!userGuess">
+        <span class="user-guess__hint">{{ $t("Type or click") }}</span>
+        <span class="user-guess__caret user-guess__caret--solo" aria-hidden="true" />
+      </template>
       <template v-else>
         <span
           v-for="(letter, index) in userGuess"
@@ -156,6 +159,13 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
   }
 }
 
+.user-guess--empty {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .user-guess__hint {
   font-family: var(--font-body);
   text-transform: none;
@@ -164,6 +174,7 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
   letter-spacing: normal;
   color: var(--text-muted);
   opacity: 0.7;
+  white-space: nowrap;
 }
 
 .user-guess__caret {
@@ -175,6 +186,16 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
   background: var(--primary-dark);
   border-radius: 2px;
   animation: caret-blink 1.05s steps(1, end) infinite;
+}
+
+.user-guess__caret--solo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  height: 16px;
+  margin: 0;
+  z-index: 1;
 }
 
 @keyframes caret-blink {
