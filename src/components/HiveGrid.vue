@@ -193,7 +193,7 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  height: 16px;
+  height: 1em;
   margin: 0;
   z-index: 1;
 }
