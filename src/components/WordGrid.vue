@@ -5,9 +5,19 @@ import { isPangram } from "@/utils/puzzle";
 const props = defineProps<{
   words: string[];
   emptyText?: string;
+  /** Words the player has already found — highlighted separately from pangrams. */
+  foundWords?: string[];
 }>();
 
 const sorted = computed(() => [...props.words].sort());
+
+const foundSet = computed(
+  () => new Set(props.foundWords?.map((w) => w.toLowerCase()) ?? []),
+);
+
+function isFound(word: string): boolean {
+  return foundSet.value.has(word.toLowerCase());
+}
 </script>
 
 <template>
@@ -16,7 +26,11 @@ const sorted = computed(() => [...props.words].sort());
     <li
       v-for="word in sorted"
       :key="word"
-      :class="{ pangram: isPangram(word) }">
+      :class="{
+        found: isFound(word),
+        pangram: isPangram(word) && !isFound(word),
+        'found-pangram': isFound(word) && isPangram(word),
+      }">
       {{ word }}
     </li>
   </ul>
@@ -54,6 +68,29 @@ const sorted = computed(() => [...props.words].sort());
     background: var(--primary);
     border-color: var(--primary);
   }
+
+  .found {
+    font-weight: 700;
+    color: var(--text);
+    background: rgba(46, 125, 50, 0.14);
+    border-color: #43a047;
+  }
+
+  .found-pangram {
+    font-weight: 800;
+    background: rgba(46, 125, 50, 0.22);
+    border-color: #2e7d32;
+  }
+}
+
+:global(html.dark) .word-grid li.found {
+  background: rgba(102, 187, 106, 0.18);
+  border-color: #66bb6a;
+}
+
+:global(html.dark) .word-grid li.found-pangram {
+  background: rgba(102, 187, 106, 0.28);
+  border-color: #81c784;
 }
 
 .empty {

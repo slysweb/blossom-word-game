@@ -109,7 +109,9 @@ watch(
               ({{ game.answers.length }})
             </button>
             <div v-if="showAnswers" class="reveal__answers">
-              <WordGrid :words="game.answers" />
+              <WordGrid
+                :words="game.answers"
+                :found-words="game.correctGuessesList" />
             </div>
           </div>
         </div>
