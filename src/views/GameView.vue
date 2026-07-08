@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useStorage } from "@vueuse/core";
 import { useGameStore } from "@/stores/game";
 import { getToday, isPlayableDate, parseDateKey } from "@/utils/puzzle";
 import HiveGrid from "@/components/HiveGrid.vue";
@@ -25,6 +26,13 @@ const showYesterday = ref(false);
 const showWon = ref(false);
 const wonDismissed = ref(false);
 const showAnswers = ref(false);
+const showChallengeWon = ref(false);
+
+/** Dates when the challenge celebration modal was already shown. */
+const challengeCelebrated = useStorage<Record<string, boolean>>(
+  "challengeCelebrated",
+  {},
+);
 
 const isArchive = computed(
   () => typeof route.params.date === "string" && route.params.date.length > 0,
@@ -36,6 +44,7 @@ async function load(): Promise<void> {
   showAnswers.value = false;
   showWon.value = false;
   wonDismissed.value = false;
+  showChallengeWon.value = false;
 
   try {
     let date = getToday();
@@ -61,9 +70,36 @@ watch(
   () => game.isComplete,
   (complete) => {
     // Only celebrate automatically for today's puzzle.
-    if (complete && game.isToday && !wonDismissed.value) showWon.value = true;
+    if (complete && game.isToday && !wonDismissed.value && !showChallengeWon.value) {
+      showWon.value = true;
+    }
   },
 );
+
+function maybeCelebrateChallenge(): void {
+  if (isArchive.value || !game.isToday || !game.dailyChallenge?.complete) return;
+  if (challengeCelebrated.value[game.gameDateString]) return;
+  showChallengeWon.value = true;
+}
+
+watch(
+  () => game.dailyChallenge?.complete,
+  (complete) => {
+    if (complete) maybeCelebrateChallenge();
+  },
+);
+
+watch(ready, (isReady) => {
+  if (isReady) maybeCelebrateChallenge();
+});
+
+function dismissChallengeWon(): void {
+  showChallengeWon.value = false;
+  challengeCelebrated.value = {
+    ...challengeCelebrated.value,
+    [game.gameDateString]: true,
+  };
+}
 </script>
 
 <template>
@@ -81,8 +117,8 @@ watch(
 
     <div class="game-area">
       <div class="game-card fireworks">
-        <div v-if="showWon" class="before" />
-        <div v-if="showWon" class="after" />
+        <div v-if="showWon || showChallengeWon" class="before" />
+        <div v-if="showWon || showChallengeWon" class="after" />
 
         <p v-if="error" class="status">Failed to load this puzzle.</p>
         <p v-else-if="!ready" class="status">Loading…</p>
@@ -140,6 +176,22 @@ watch(
     <h2>{{ $t("GeniusMessage") }}</h2>
     <div class="won-share">
       <ShareButton />
+    </div>
+  </BaseModal>
+
+  <BaseModal
+    v-model="showChallengeWon"
+    :title="$t('challenge.wonTitle')"
+    @closed="dismissChallengeWon">
+    <p class="challenge-won__message">{{ $t("challenge.wonMessage") }}</p>
+    <div class="challenge-won__flowers" aria-hidden="true">
+      {{ "🌸".repeat(game.dailyChallenge?.totalCount ?? 0) }}
+    </div>
+    <div class="challenge-won__actions">
+      <ShareButton :text="game.challengeShareText" />
+      <button class="continue-btn" type="button" @click="dismissChallengeWon">
+        {{ $t("challenge.continuePlay") }}
+      </button>
     </div>
   </BaseModal>
 </template>
@@ -240,6 +292,59 @@ watch(
 .won-share {
   margin-top: 1rem;
   text-align: center;
+}
+
+.challenge-won__message {
+  margin: 0;
+  text-align: center;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.challenge-won__flowers {
+  margin: 1rem 0 1.25rem;
+  text-align: center;
+  font-size: 1.25rem;
+  letter-spacing: 0.12em;
+  line-height: 1.8;
+  animation: challenge-bloom 0.6s ease-out;
+}
+
+@keyframes challenge-bloom {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.challenge-won__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.continue-btn {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--surface-alt);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0.6rem 1.4rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+  }
 }
 
 .reveal {

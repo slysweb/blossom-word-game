@@ -65,6 +65,10 @@
     "len6": "6-letter",
     "pangram": "Pangram",
     "progress": "{litCount} / {totalCount} bloomed",
-    "complete": "Challenge complete! 🌸"
+    "complete": "Challenge complete! 🌸",
+    "wonTitle": "Congratulations!",
+    "wonMessage": "You completed today's challenge and bloomed every flower!",
+    "continuePlay": "Keep playing",
+    "shareLine": "Today's Challenge complete! {total}/{total} flowers bloomed"
   }
 }

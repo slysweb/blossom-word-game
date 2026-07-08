@@ -4,6 +4,11 @@ import { useI18n } from "vue-i18n";
 import { useGameStore } from "@/stores/game";
 import { useToast } from "@/composables/useToast";
 
+const props = defineProps<{
+  /** Override the default share text from the game store. */
+  text?: string;
+}>();
+
 const game = useGameStore();
 const toast = useToast();
 const { t } = useI18n();
@@ -33,7 +38,7 @@ async function copyToClipboard(text: string): Promise<void> {
 }
 
 async function share(): Promise<void> {
-  const text = game.shareText;
+  const text = props.text ?? game.shareText;
 
   // Native share sheet on mobile; straight clipboard copy on desktop.
   if (isMobileDevice() && navigator.share) {

@@ -139,6 +139,19 @@ export const useGameStore = defineStore("game", () => {
     ].join("\n");
   });
 
+  /** Share text when today's flower challenge is complete. */
+  const challengeShareText = computed(() => {
+    const ch = dailyChallenge.value;
+    const base = shareText.value;
+    if (!ch?.complete) return base;
+    const blooms = "🌸".repeat(ch.totalCount);
+    return [
+      `🌸 Blossom Word Game #${puzzleNo.value}`,
+      `${t("challenge.shareLine", { total: ch.totalCount })} ${blooms}`,
+      ...base.split("\n").slice(1),
+    ].join("\n");
+  });
+
   function pointsMessage(points: number): string {
     const key = POINTS_MESSAGES[points] ?? "awesome";
     return `${t(`points.${key}`)}! +${points}`;
@@ -238,6 +251,7 @@ export const useGameStore = defineStore("game", () => {
     pangramCount,
     dailyChallenge,
     shareText,
+    challengeShareText,
     submitGuess,
     ensureLoaded,
     openDate,
