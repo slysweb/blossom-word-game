@@ -87,6 +87,39 @@
       <li>Tap the progress bar to see the score needed for each rank today.</li>
     </ul>
 
+    <h3>Sharing your result</h3>
+    <p>
+      Tap <strong>Share your result</strong> to copy a spoiler-free summary, similar
+      to Wordle. The 🌸 and 🌱 on the second line show your <strong>rank progress</strong>
+      toward Genius &mdash; not the Today's Challenge flowers beside the hive.
+    </p>
+    <pre class="share-example" aria-label="Example share text">🌸 Blossom Word Game #1650
+🌸🌸🌱🌱🌱🌱🌱🌱🌱🌱 Good Start
+3/40 words · 7 pts
+https://blossomword.com</pre>
+    <ul>
+      <li>
+        <strong>Line 1</strong> &mdash; the puzzle number for that day.
+      </li>
+      <li>
+        <strong>Line 2</strong> &mdash; ten slots from Beginner to Genius.
+        Each 🌸 is one step of rank progress; each 🌱 is a step still to go.
+        In the example, <em>Good Start</em> (20% progress) fills 2 of 10 slots with 🌸.
+        At Genius, all ten are 🌸.
+      </li>
+      <li>
+        <strong>Line 3</strong> &mdash; how many words you found, out of the total
+        in the puzzle, and your score in points.
+      </li>
+      <li>
+        <strong>Line 4</strong> &mdash; a link back to the game.
+      </li>
+      <li>
+        If you complete <strong>Today's Challenge</strong>, the share text also
+        mentions how many challenge flowers you bloomed.
+      </li>
+    </ul>
+
     <h3>Tips &amp; strategy</h3>
     <ul>
       <li>Look for the pangram early &mdash; it is the biggest single score boost.</li>
@@ -174,6 +207,20 @@ ul li {
     font-weight: 700;
     color: var(--primary);
   }
+}
+
+.share-example {
+  margin: 0.75rem 0 1rem;
+  padding: 0.85rem 1rem;
+  font-family: ui-monospace, "Cascadia Code", "Segoe UI Mono", monospace;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text);
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  white-space: pre-wrap;
+  overflow-x: auto;
 }
 
 html:not(.dark) .score-table .pangram-row td {

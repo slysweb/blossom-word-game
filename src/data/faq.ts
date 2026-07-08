@@ -39,6 +39,16 @@ export const faqs: FaqItem[] = [
     answer:
       "Yes, the game is completely free to play online with unlimited puzzles, and no account or download is required.",
   },
+  {
+    question: "What does the share text mean?",
+    answer:
+      "Share your result copies a short, spoiler-free summary. Line 1 is the puzzle number. Line 2 shows rank progress toward Genius in ten slots: each 🌸 is progress made, each 🌱 is still to go, followed by your rank name (for example, Good Start with 2 🌸 and 8 🌱 means 20% progress). This bar is separate from Today's Challenge flowers. Line 3 shows words found, total words, and your score. Line 4 is a link to the game. Completing Today's Challenge adds a note about bloomed challenge flowers.",
+  },
+  {
+    question: "How do I clear my history or progress?",
+    answer:
+      "All saved data stays in your browser's local storage — we do not store it on a server. To reset everything for blossomword.com, open your browser settings and clear site data (sometimes called cookies and site data) for this website. That removes found words, scores, challenge progress, and theme preference. In Chrome: Settings → Privacy and security → Delete browsing data → choose Cookies and other site data, or use \"See all site data and permissions\" and remove blossomword.com. In Safari: Settings → Privacy → Manage Website Data. In Firefox: Settings → Privacy & Security → Cookies and Site Data → Manage Data. After clearing, reload the page and you will start fresh.",
+  },
 ];
 
 export function faqJsonLd(): object {
