@@ -5,8 +5,8 @@
       Blossom <span class="hero__accent">Word Game</span>
     </h1>
     <p class="hero__tagline">
-      A free daily word hunt puzzle &mdash; just like Spelling Bee. Make as many
-      words as you can from the hive and reach the Genius rank.
+      A free daily word hunt puzzle. Make as many words as you can from the hive,
+      reach the Genius rank, and bloom every flower by completing the challenge.
     </p>
     <ul class="hero__features">
       <li>✓ Free to play</li>
