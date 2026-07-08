@@ -79,47 +79,48 @@ watch(
       {{ isArchive ? `Puzzle for ${game.gameDateString}` : "Blossom Word Game of Today" }}
     </h2>
 
-    <div class="game-card fireworks">
-      <div v-if="showWon" class="before" />
-      <div v-if="showWon" class="after" />
+    <div class="game-area">
+      <div class="game-card fireworks">
+        <div v-if="showWon" class="before" />
+        <div v-if="showWon" class="after" />
 
-      <p v-if="error" class="status">Failed to load this puzzle.</p>
-      <p v-else-if="!ready" class="status">Loading…</p>
+        <p v-if="error" class="status">Failed to load this puzzle.</p>
+        <p v-else-if="!ready" class="status">Loading…</p>
 
-      <template v-else>
-        <div class="game-card__top">
-          <span>#{{ game.puzzleNo }} · {{ game.gameDateString }}</span>
-          <span class="yesterday-link" @click="showYesterday = true">
-            👁 {{ $t("Yesterday") }} {{ $t("Answer") }}
-          </span>
-        </div>
-
-        <div class="game-play">
-          <HiveGrid />
-          <DailyChallenge v-if="!isArchive" />
-        </div>
-
-        <div class="game-result">
-          <ProgressBar />
-          <CorrectGuesses />
-
-          <div v-if="game.userScore > 0" class="share-row">
-            <ShareButton />
+        <template v-else>
+          <div class="game-card__top">
+            <span>#{{ game.puzzleNo }} · {{ game.gameDateString }}</span>
+            <span class="yesterday-link" @click="showYesterday = true">
+              👁 {{ $t("Yesterday") }} {{ $t("Answer") }}
+            </span>
           </div>
 
-          <div v-if="isArchive" class="reveal">
-            <button class="reveal__btn" @click="showAnswers = !showAnswers">
-              {{ showAnswers ? "Hide answers" : "Show all answers" }}
-              ({{ game.answers.length }})
-            </button>
-            <div v-if="showAnswers" class="reveal__answers">
-              <WordGrid
-                :words="game.answers"
-                :found-words="game.correctGuessesList" />
+          <HiveGrid />
+
+          <div class="game-result">
+            <ProgressBar />
+            <CorrectGuesses />
+
+            <div v-if="game.userScore > 0" class="share-row">
+              <ShareButton />
+            </div>
+
+            <div v-if="isArchive" class="reveal">
+              <button class="reveal__btn" @click="showAnswers = !showAnswers">
+                {{ showAnswers ? "Hide answers" : "Show all answers" }}
+                ({{ game.answers.length }})
+              </button>
+              <div v-if="showAnswers" class="reveal__answers">
+                <WordGrid
+                  :words="game.answers"
+                  :found-words="game.correctGuessesList" />
+              </div>
             </div>
           </div>
-        </div>
-      </template>
+        </template>
+      </div>
+
+      <DailyChallenge v-if="!isArchive && ready && !error" />
     </div>
 
     <template v-if="!isArchive">
@@ -170,15 +171,26 @@ watch(
   }
 }
 
+.game-area {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1.25rem;
+  margin: 1rem auto 0;
+  max-width: 980px;
+  padding: 0 0.5rem;
+}
+
 .game-card {
   position: relative;
+  flex: 1 1 720px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-lg);
-  margin: 1rem auto 0;
   padding: 1.25rem 1.25rem 1.75rem;
   max-width: 720px;
+  min-width: 0;
 }
 
 .game-card__top {
@@ -213,16 +225,6 @@ watch(
     border-color: var(--primary);
     background: var(--primary-soft);
   }
-}
-
-.game-play {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 1.25rem;
-  flex-wrap: wrap;
-  margin: 0 auto;
-  max-width: 640px;
 }
 
 .game-result {
@@ -270,6 +272,12 @@ watch(
 }
 
 @media (max-width: 768px) {
+  .game-area {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+  }
+
   .game-card {
     margin: 0.5rem auto 0;
     padding: 0.5rem 0.5rem 1rem;

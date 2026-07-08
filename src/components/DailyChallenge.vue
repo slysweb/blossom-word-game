@@ -57,13 +57,14 @@ const challenge = computed(() => game.dailyChallenge);
 
 <style scoped lang="scss">
 .daily-challenge {
-  flex: 1;
+  flex: 0 0 240px;
   min-width: 200px;
   max-width: 260px;
-  padding: 1rem 1.1rem;
-  background: var(--surface-alt);
+  padding: 1.25rem 1.1rem;
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
 }
 
 .daily-challenge__title {
@@ -160,8 +161,10 @@ const challenge = computed(() => game.dailyChallenge);
 
 @media (max-width: 768px) {
   .daily-challenge {
-    max-width: 100%;
+    flex: 1 1 auto;
+    max-width: 720px;
     width: 100%;
+    margin: 0 auto;
   }
 }
 </style>
