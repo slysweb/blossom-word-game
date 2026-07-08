@@ -381,10 +381,14 @@ function dismissChallengeWon(): void {
     flex-direction: column;
     align-items: stretch;
     padding: 0;
+    gap: 1rem;
   }
 
   .game-card {
-    margin: 0.5rem auto 0;
+    flex: none;
+    width: 100%;
+    max-width: none;
+    margin: 0.5rem 0 0;
     padding: 0.5rem 0.5rem 1rem;
   }
 }

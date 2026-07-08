@@ -17,7 +17,7 @@ export const routes: RouteRecordRaw[] = [
       seo: {
         title: "Blossom Word Game - Free Daily Word Hunt Puzzle",
         description:
-          "Play Blossom Word Game free online. A new word hunt puzzle every day, just like Spelling Bee. Make words from the hive, score points, and reach Genius rank.",
+          "Play Blossom Word Game free online. Daily word hunt — reach Genius and bloom every flower in the daily challenge.",
         keywords:
           "blossom word game,spelling bee,blossom word,word game,puzzle game,daily word puzzle,word hunt",
         path: "/",

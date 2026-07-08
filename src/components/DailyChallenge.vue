@@ -184,10 +184,11 @@ function petalAngles(group: ChallengeGroup): number[] {
 
 @media (max-width: 768px) {
   .daily-challenge {
-    flex: 1 1 auto;
-    max-width: 720px;
+    flex: none;
     width: 100%;
-    margin: 0 auto;
+    min-width: 0;
+    max-width: none;
+    margin: 0;
   }
 }
 </style>
