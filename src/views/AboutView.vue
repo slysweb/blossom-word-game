@@ -33,13 +33,15 @@
     <h2>Today's Challenge</h2>
     <p>
       Every puzzle includes a <strong>Today's Challenge</strong> panel beside the
-      hive. Bloom a row of flowers by finding words of each length: five 4-letter
-      words, four 5-letter words, two 6-letter words, and — when the puzzle includes
-      one — the pangram to light a special seven-petal rainbow flower.
+      hive. Bloom a row of flowers by finding words of each length: up to five 4-letter
+      words, four 5-letter words, three 6-letter words, two 7-letter words, and — when
+      the puzzle includes one — a pangram to bloom the special seven-petal rainbow
+      flower. Each row shows only as many flowers as that puzzle has answers at that
+      length.
     </p>
     <p>
-      Each flower lights up as soon as you find a qualifying word, in the order you
-      discover them. Light every flower to complete the challenge — whether you are
+      Each flower blooms as soon as you find a qualifying word, in the order you
+      discover them. Bloom every flower to complete the challenge — whether you are
       playing today or revisiting a puzzle in the
       <RouterLink to="/archive">Archive</RouterLink>.
     </p>

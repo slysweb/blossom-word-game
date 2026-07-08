@@ -67,16 +67,18 @@
         of flowers to bloom as you play.
       </li>
       <li>
-        Find <strong>5 four-letter words</strong>, <strong>4 five-letter words</strong>,
-        and <strong>2 six-letter words</strong> to light those rows. When the puzzle
-        includes a pangram, find it to bloom the <strong>seven-color flower</strong>.
+        Find up to <strong>5 four-letter words</strong>, <strong>4 five-letter words</strong>,
+        <strong>3 six-letter words</strong>, and <strong>2 seven-letter words</strong>
+        to bloom those rows. When the puzzle includes a pangram, find it to bloom the
+        <strong>seven-color flower</strong>. Rows show fewer flowers when the puzzle has
+        fewer answers at that length.
       </li>
       <li>
         Each flower has one petal per letter — four petals for 4-letter words, five
-        for 5-letter words, and so on. Flowers light up in the order you discover
+        for 5-letter words, and so on. Flowers bloom in the order you discover
         matching words.
       </li>
-      <li>Light every flower to complete the challenge.</li>
+      <li>Bloom every flower to complete the challenge.</li>
     </ul>
 
     <h3>Ranking rules</h3>

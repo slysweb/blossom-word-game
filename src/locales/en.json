@@ -59,10 +59,11 @@
   },
   "challenge": {
     "title": "Today's Challenge",
-    "desc": "Find words of each length to bloom every flower. Bloom the seven-color flower with a pangram!",
+    "desc": "Find 4- through 7-letter words to bloom each row, then bloom the seven-color flower with a pangram. Rows adjust to each puzzle's answers.",
     "len4": "4-letter",
     "len5": "5-letter",
     "len6": "6-letter",
+    "len7": "7-letter",
     "pangram": "Pangram",
     "progress": "{litCount} / {totalCount} bloomed",
     "complete": "Challenge complete! 🌸",
