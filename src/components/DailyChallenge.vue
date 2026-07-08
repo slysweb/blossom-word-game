@@ -41,7 +41,9 @@ function petalAngles(group: ChallengeGroup): number[] {
               cy="8"
               :rx="group.petalCount >= 7 ? 4 : 5"
               :ry="group.petalCount >= 7 ? 6 : 7"
-              :fill="slot.lit ? group.petalColors[i] : undefined"
+              :style="{
+                '--petal-color': slot.lit ? group.petalColors[i] : '',
+              }"
               :transform="`rotate(${angle} 16 16)`" />
             <circle class="flower__center" cx="16" cy="16" r="4" />
           </svg>
@@ -127,9 +129,12 @@ function petalAngles(group: ChallengeGroup): number[] {
   }
 
   .flower__petal {
-    fill: var(--border-strong);
+    fill: var(--petal-color, var(--border-strong));
     opacity: 0.35;
-    transition: fill 0.25s ease, opacity 0.25s ease;
+    transition:
+      fill 0.25s ease,
+      opacity 0.25s ease,
+      transform 0.25s ease;
   }
 
   .flower__center {
@@ -144,8 +149,12 @@ function petalAngles(group: ChallengeGroup): number[] {
     }
 
     .flower__center {
-      fill: #fff8dc;
+      fill: #f5d000;
       opacity: 1;
+    }
+
+    svg {
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.12));
     }
   }
 }
