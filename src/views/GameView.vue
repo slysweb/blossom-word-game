@@ -138,18 +138,6 @@ function dismissChallengeWon(): void {
 
             <div class="game-result">
               <ProgressBar />
-
-              <div v-if="isArchive" class="reveal">
-                <button class="reveal__btn" @click="showAnswers = !showAnswers">
-                  {{ showAnswers ? "Hide answers" : "Show all answers" }}
-                  ({{ game.answers.length }})
-                </button>
-                <div v-if="showAnswers" class="reveal__answers">
-                  <WordGrid
-                    :words="game.answers"
-                    :found-words="game.correctGuessesList" />
-                </div>
-              </div>
             </div>
           </template>
         </div>
@@ -165,6 +153,17 @@ function dismissChallengeWon(): void {
         <CorrectGuesses />
         <div v-if="game.userScore > 0" class="game-found__share">
           <ShareButton />
+        </div>
+        <div v-if="isArchive" class="game-found__reveal">
+          <button class="reveal__btn" @click="showAnswers = !showAnswers">
+            {{ showAnswers ? "Hide answers" : "Show all answers" }}
+            ({{ game.answers.length }})
+          </button>
+          <div v-if="showAnswers" class="reveal__answers">
+            <WordGrid
+              :words="game.answers"
+              :found-words="game.correctGuessesList" />
+          </div>
         </div>
       </div>
     </div>
@@ -329,6 +328,10 @@ function dismissChallengeWon(): void {
   margin-top: 1rem;
 }
 
+.game-found__reveal {
+  margin-top: 1rem;
+}
+
 .won-share {
   margin-top: 1rem;
   text-align: center;
@@ -388,7 +391,6 @@ function dismissChallengeWon(): void {
 }
 
 .reveal {
-  margin-top: 1.5rem;
   text-align: center;
 }
 
