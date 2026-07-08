@@ -16,6 +16,10 @@ import {
   puzzleNumber,
 } from "@/utils/puzzle";
 import { SITE_URL } from "@/utils/seo";
+import {
+  buildChallengeState,
+  isChallengeActive,
+} from "@/utils/dailyChallenge";
 import type { Puzzle } from "@/types/puzzle";
 
 const PROGRESS_PERCENTAGES = [0, 20, 40, 50, 60, 70, 80, 90, 100];
@@ -108,6 +112,12 @@ export const useGameStore = defineStore("game", () => {
   const pangramCount = computed(
     () => correctGuessesList.value.filter((w) => isPangram(w)).length,
   );
+
+  /** Today's word-length challenge (homepage only; not for archive dates). */
+  const dailyChallenge = computed(() => {
+    if (!isToday.value || !isChallengeActive(activeKey.value)) return null;
+    return buildChallengeState(correctGuessesList.value, answers.value);
+  });
 
   /** A no-spoiler, Wordle-style result string for sharing. */
   const shareText = computed(() => {
@@ -226,6 +236,7 @@ export const useGameStore = defineStore("game", () => {
     puzzleNo,
     rankLabel,
     pangramCount,
+    dailyChallenge,
     shareText,
     submitGuess,
     ensureLoaded,

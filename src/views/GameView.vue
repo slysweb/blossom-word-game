@@ -13,6 +13,7 @@ import HeroSection from "@/components/HeroSection.vue";
 import FaqSection from "@/components/FaqSection.vue";
 import BaseModal from "@/components/BaseModal.vue";
 import ShareButton from "@/components/ShareButton.vue";
+import DailyChallenge from "@/components/DailyChallenge.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -93,7 +94,10 @@ watch(
           </span>
         </div>
 
-        <HiveGrid />
+        <div class="game-play">
+          <HiveGrid />
+          <DailyChallenge v-if="!isArchive" />
+        </div>
 
         <div class="game-result">
           <ProgressBar />
@@ -209,6 +213,16 @@ watch(
     border-color: var(--primary);
     background: var(--primary-soft);
   }
+}
+
+.game-play {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  max-width: 640px;
 }
 
 .game-result {

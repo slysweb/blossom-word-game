@@ -56,5 +56,15 @@
     "excellent": "Excellent",
     "amazing": "Amazing",
     "awesome": "Awesome"
+  },
+  "challenge": {
+    "title": "Today's Challenge",
+    "desc": "Find words of each length to bloom every flower. Each flower has its own color.",
+    "len4": "4-letter",
+    "len5": "5-letter",
+    "len6": "6-letter",
+    "pangram": "Pangram",
+    "progress": "{litCount} / {totalCount} bloomed",
+    "complete": "Challenge complete! 🌸"
   }
 }
