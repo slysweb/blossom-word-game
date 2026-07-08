@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const year = new Date().getFullYear();
+const GITHUB_URL = "https://github.com/slysweb/blossom-word-game";
 </script>
 
 <template>
@@ -15,6 +16,7 @@ const year = new Date().getFullYear();
         <RouterLink to="/archive">{{ $t("Archive") }}</RouterLink>
         <RouterLink to="/solver">{{ $t("Blossom Solver") }}</RouterLink>
         <RouterLink to="/about">{{ $t("About") }}</RouterLink>
+        <a :href="GITHUB_URL" rel="nofollow noopener noreferrer" target="_blank">GitHub</a>
         <RouterLink to="/privacy">{{ $t("Privacy") }}</RouterLink>
         <RouterLink to="/terms">{{ $t("Terms") }}</RouterLink>
       </nav>

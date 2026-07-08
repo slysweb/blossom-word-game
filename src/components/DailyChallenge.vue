@@ -100,7 +100,7 @@ function petalAngles(group: ChallengeGroup): number[] {
 }
 
 .challenge-group {
-  margin-bottom: 0.85rem;
+  margin-bottom: 1.4rem;
 
   &:last-of-type {
     margin-bottom: 0.65rem;

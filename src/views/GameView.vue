@@ -115,48 +115,58 @@ function dismissChallengeWon(): void {
       {{ isArchive ? `Puzzle for ${game.gameDateString}` : "Blossom Word Game of Today" }}
     </h2>
 
-    <div class="game-area">
-      <div class="game-card fireworks">
-        <div v-if="showWon || showChallengeWon" class="before" />
-        <div v-if="showWon || showChallengeWon" class="after" />
+    <div class="game-play">
+      <div
+        class="game-area"
+        :class="{ 'game-area--with-challenge': !isArchive }">
+        <div class="game-card fireworks">
+          <div v-if="showWon || showChallengeWon" class="before" />
+          <div v-if="showWon || showChallengeWon" class="after" />
 
-        <p v-if="error" class="status">Failed to load this puzzle.</p>
-        <p v-else-if="!ready" class="status">Loading…</p>
+          <p v-if="error" class="status">Failed to load this puzzle.</p>
+          <p v-else-if="!ready" class="status">Loading…</p>
 
-        <template v-else>
-          <div class="game-card__top">
-            <span>#{{ game.puzzleNo }} · {{ game.gameDateString }}</span>
-            <span class="yesterday-link" @click="showYesterday = true">
-              👁 {{ $t("Yesterday") }} {{ $t("Answer") }}
-            </span>
-          </div>
-
-          <HiveGrid />
-
-          <div class="game-result">
-            <ProgressBar />
-            <CorrectGuesses />
-
-            <div v-if="game.userScore > 0" class="share-row">
-              <ShareButton />
+          <template v-else>
+            <div class="game-card__top">
+              <span>#{{ game.puzzleNo }} · {{ game.gameDateString }}</span>
+              <span class="yesterday-link" @click="showYesterday = true">
+                👁 {{ $t("Yesterday") }} {{ $t("Answer") }}
+              </span>
             </div>
 
-            <div v-if="isArchive" class="reveal">
-              <button class="reveal__btn" @click="showAnswers = !showAnswers">
-                {{ showAnswers ? "Hide answers" : "Show all answers" }}
-                ({{ game.answers.length }})
-              </button>
-              <div v-if="showAnswers" class="reveal__answers">
-                <WordGrid
-                  :words="game.answers"
-                  :found-words="game.correctGuessesList" />
+            <HiveGrid />
+
+            <div class="game-result">
+              <ProgressBar />
+
+              <div v-if="isArchive" class="reveal">
+                <button class="reveal__btn" @click="showAnswers = !showAnswers">
+                  {{ showAnswers ? "Hide answers" : "Show all answers" }}
+                  ({{ game.answers.length }})
+                </button>
+                <div v-if="showAnswers" class="reveal__answers">
+                  <WordGrid
+                    :words="game.answers"
+                    :found-words="game.correctGuessesList" />
+                </div>
               </div>
             </div>
-          </div>
-        </template>
+          </template>
+        </div>
+
+        <DailyChallenge v-if="ready && !error" />
+        <div
+          v-else-if="!isArchive && !error"
+          class="daily-challenge-placeholder"
+          aria-hidden="true" />
       </div>
 
-      <DailyChallenge v-if="ready && !error" />
+      <div v-if="ready && !error" class="game-found">
+        <CorrectGuesses />
+        <div v-if="game.userScore > 0" class="game-found__share">
+          <ShareButton />
+        </div>
+      </div>
     </div>
 
     <template v-if="!isArchive">
@@ -223,14 +233,35 @@ function dismissChallengeWon(): void {
   }
 }
 
+.game-play {
+  max-width: 960px;
+  margin: 1rem auto 0;
+  padding: 0 0.5rem;
+}
+
 .game-area {
   display: flex;
   align-items: flex-start;
   justify-content: center;
   gap: 1.25rem;
-  margin: 1rem auto 0;
-  max-width: 960px;
-  padding: 0 0.5rem;
+}
+
+.game-area--with-challenge {
+  @media (min-width: 769px) {
+    min-height: 580px;
+  }
+}
+
+.daily-challenge-placeholder {
+  flex: 0 0 320px;
+  min-width: 320px;
+  max-width: 340px;
+  min-height: 520px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  visibility: hidden;
 }
 
 .game-card {
@@ -243,6 +274,10 @@ function dismissChallengeWon(): void {
   padding: 1.25rem 1.25rem 1.75rem;
   max-width: 560px;
   min-width: 0;
+
+  @media (min-width: 769px) {
+    min-height: 480px;
+  }
 }
 
 .game-card__top {
@@ -284,9 +319,14 @@ function dismissChallengeWon(): void {
   margin: 0 auto;
 }
 
-.share-row {
-  margin-top: 1rem;
+.game-found {
+  max-width: 720px;
+  margin: 1.25rem auto 0;
   text-align: center;
+}
+
+.game-found__share {
+  margin-top: 1rem;
 }
 
 .won-share {
@@ -377,19 +417,32 @@ function dismissChallengeWon(): void {
 }
 
 @media (max-width: 768px) {
+  .game-play {
+    padding: 0;
+  }
+
   .game-area {
     flex-direction: column;
     align-items: stretch;
-    padding: 0;
     gap: 1rem;
+  }
+
+  .daily-challenge-placeholder {
+    display: none;
   }
 
   .game-card {
     flex: none;
     width: 100%;
     max-width: none;
+    min-height: 0;
     margin: 0.5rem 0 0;
     padding: 0.5rem 0.5rem 1rem;
+  }
+
+  .game-found {
+    margin-top: 1rem;
+    padding: 0 0.25rem;
   }
 }
 </style>

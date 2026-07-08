@@ -78,10 +78,30 @@
       </li>
     </ul>
 
+    <h2>Open source</h2>
+    <p>
+      Blossom Word Game is
+      <a
+        rel="nofollow noopener noreferrer"
+        target="_blank"
+        href="https://github.com/slysweb/blossom-word-game"
+        >open source on GitHub</a
+      >. If you run into a bug, have a feature idea, or want to ask a question,
+      please
+      <a
+        rel="nofollow noopener noreferrer"
+        target="_blank"
+        href="https://github.com/slysweb/blossom-word-game/issues/new"
+        >open an issue on GitHub</a
+      >
+      &mdash; that is the best place to reach us. Pull requests are welcome too.
+    </p>
+
     <h2>Contact</h2>
     <p>
-      Questions or feedback? Email us at
+      Prefer email? Write to
       <a href="mailto:support@blossomword.com">support@blossomword.com</a>.
+      For anything about the game itself, GitHub issues are usually faster.
     </p>
   </article>
 </template>
