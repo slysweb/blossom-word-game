@@ -8,7 +8,6 @@ export type ChallengeCategory = "len4" | "len5" | "len6" | "pangram";
 export interface FlowerSlot {
   id: string;
   category: ChallengeCategory;
-  color: string;
   lit: boolean;
   word?: string;
 }
@@ -16,6 +15,10 @@ export interface FlowerSlot {
 export interface ChallengeGroup {
   category: ChallengeCategory;
   labelKey: string;
+  /** Petals per flower in this row (4 / 5 / 6 / 7). */
+  petalCount: number;
+  /** One color per petal when bloomed — shared by every flower in the row. */
+  petalColors: string[];
   slots: FlowerSlot[];
 }
 
@@ -33,20 +36,23 @@ const TARGETS: Record<ChallengeCategory, number> = {
   pangram: 1,
 };
 
-/** One unique color per flower slot (12 total). */
-const FLOWER_COLORS = [
+/** Petal count matches word length (pangram = all 7 letters). */
+export const PETAL_COUNT: Record<ChallengeCategory, number> = {
+  len4: 4,
+  len5: 5,
+  len6: 6,
+  pangram: 7,
+};
+
+/** Rainbow palette — first N colors used per category (4-color, 5-color, etc.). */
+export const PETAL_PALETTE = [
   "#FF6B6B",
   "#FF8E53",
-  "#FFB020",
   "#FFD93D",
   "#6BCB77",
   "#4ECDC4",
   "#4D96FF",
-  "#7B68EE",
   "#C77DFF",
-  "#E056FD",
-  "#FF6FAE",
-  "#00BCD4",
 ];
 
 const GROUP_ORDER: ChallengeCategory[] = ["len4", "len5", "len6", "pangram"];
@@ -57,6 +63,10 @@ const LABEL_KEYS: Record<ChallengeCategory, string> = {
   len6: "challenge.len6",
   pangram: "challenge.pangram",
 };
+
+export function petalColorsFor(category: ChallengeCategory): string[] {
+  return PETAL_PALETTE.slice(0, PETAL_COUNT[category]);
+}
 
 export function isChallengeActive(dateKey: string): boolean {
   return dateKey >= CHALLENGE_START;
@@ -76,7 +86,6 @@ function categoryForWord(word: string): ChallengeCategory | null {
 
 function createSlots(includePangram: boolean): FlowerSlot[] {
   const slots: FlowerSlot[] = [];
-  let colorIdx = 0;
 
   for (const category of GROUP_ORDER) {
     const count =
@@ -89,7 +98,6 @@ function createSlots(includePangram: boolean): FlowerSlot[] {
       slots.push({
         id: `${category}-${i}`,
         category,
-        color: FLOWER_COLORS[colorIdx++] ?? "#fce303",
         lit: false,
       });
     }
@@ -133,6 +141,8 @@ export function buildChallengeState(
       {
         category,
         labelKey: LABEL_KEYS[category],
+        petalCount: PETAL_COUNT[category],
+        petalColors: petalColorsFor(category),
         slots: categorySlots,
       },
     ];

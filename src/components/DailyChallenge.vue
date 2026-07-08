@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useGameStore } from "@/stores/game";
+import type { ChallengeGroup } from "@/utils/dailyChallenge";
 
 const game = useGameStore();
 
 const challenge = computed(() => game.dailyChallenge);
+
+function petalAngles(group: ChallengeGroup): number[] {
+  const step = 360 / group.petalCount;
+  return Array.from({ length: group.petalCount }, (_, i) => step * i);
+}
 </script>
 
 <template>
@@ -22,20 +28,22 @@ const challenge = computed(() => game.dailyChallenge);
           v-for="slot in group.slots"
           :key="slot.id"
           class="flower"
-          :class="{ 'flower--lit': slot.lit }"
-          :style="{ '--flower-color': slot.color }"
+          :class="{
+            'flower--lit': slot.lit,
+          }"
           :title="slot.lit ? slot.word : undefined">
           <svg viewBox="0 0 32 32" aria-hidden="true">
-            <circle class="flower__center" cx="16" cy="16" r="4" />
             <ellipse
-              v-for="i in 5"
+              v-for="(angle, i) in petalAngles(group)"
               :key="i"
               class="flower__petal"
               cx="16"
               cy="8"
-              rx="5"
-              ry="7"
-              :transform="`rotate(${(i - 1) * 72} 16 16)`" />
+              :rx="group.petalCount >= 7 ? 4 : 5"
+              :ry="group.petalCount >= 7 ? 6 : 7"
+              :fill="slot.lit ? group.petalColors[i] : undefined"
+              :transform="`rotate(${angle} 16 16)`" />
+            <circle class="flower__center" cx="16" cy="16" r="4" />
           </svg>
         </span>
       </div>
@@ -132,7 +140,6 @@ const challenge = computed(() => game.dailyChallenge);
 
   &--lit {
     .flower__petal {
-      fill: var(--flower-color);
       opacity: 1;
     }
 
