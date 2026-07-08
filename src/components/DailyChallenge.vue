@@ -30,6 +30,7 @@ function petalAngles(group: ChallengeGroup): number[] {
           class="flower"
           :class="{
             'flower--lit': slot.lit,
+            'flower--pangram': group.category === 'pangram',
           }"
           :title="slot.lit ? slot.word : undefined">
           <svg viewBox="0 0 32 32" aria-hidden="true">
@@ -83,7 +84,7 @@ function petalAngles(group: ChallengeGroup): number[] {
 }
 
 .daily-challenge__title {
-  margin: 0 0 0.35rem;
+  margin: 0 0 0.38rem;
   font-family: var(--font-display);
   font-size: 1.05rem;
   font-weight: 600;
@@ -158,6 +159,11 @@ function petalAngles(group: ChallengeGroup): number[] {
       fill: #fff8e7;
       stroke: #6d4c2a;
       opacity: 1;
+    }
+
+    &.flower--pangram .flower__center {
+      fill: #fff3a8;
+      stroke: #b8860b;
     }
 
     svg {
