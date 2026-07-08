@@ -60,6 +60,25 @@
       </tbody>
     </table>
 
+    <h3>Today's Challenge</h3>
+    <ul>
+      <li>
+        The <strong>Today's Challenge</strong> panel beside the hive shows a garden
+        of flowers to bloom as you play.
+      </li>
+      <li>
+        Find <strong>5 four-letter words</strong>, <strong>4 five-letter words</strong>,
+        and <strong>2 six-letter words</strong> to light those rows. When the puzzle
+        includes a pangram, find it to bloom the <strong>seven-color flower</strong>.
+      </li>
+      <li>
+        Each flower has one petal per letter — four petals for 4-letter words, five
+        for 5-letter words, and so on. Flowers light up in the order you discover
+        matching words.
+      </li>
+      <li>Light every flower to complete the challenge.</li>
+    </ul>
+
     <h3>Ranking rules</h3>
     <ul>
       <li>Ranks are based on the percentage of possible points in a puzzle.</li>

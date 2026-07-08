@@ -45,7 +45,12 @@ function petalAngles(group: ChallengeGroup): number[] {
                 '--petal-color': slot.lit ? group.petalColors[i] : '',
               }"
               :transform="`rotate(${angle} 16 16)`" />
-            <circle class="flower__center" cx="16" cy="16" r="4" />
+            <circle
+              class="flower__center"
+              cx="16"
+              cy="16"
+              r="3.5"
+              stroke-width="1.2" />
           </svg>
         </span>
       </div>
@@ -67,10 +72,10 @@ function petalAngles(group: ChallengeGroup): number[] {
 
 <style scoped lang="scss">
 .daily-challenge {
-  flex: 0 0 240px;
-  min-width: 200px;
-  max-width: 260px;
-  padding: 1.25rem 1.1rem;
+  flex: 0 0 320px;
+  min-width: 320px;
+  max-width: 340px;
+  padding: 1.25rem 1.15rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -114,14 +119,14 @@ function petalAngles(group: ChallengeGroup): number[] {
 
 .challenge-group__flowers {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
+  flex-wrap: nowrap;
+  gap: 0.4rem;
 }
 
 .flower {
   display: inline-flex;
-  width: 28px;
-  height: 28px;
+  width: 48px;
+  height: 48px;
 
   svg {
     width: 100%;
@@ -139,8 +144,9 @@ function petalAngles(group: ChallengeGroup): number[] {
 
   .flower__center {
     fill: var(--border-strong);
+    stroke: transparent;
     opacity: 0.4;
-    transition: fill 0.25s ease, opacity 0.25s ease;
+    transition: fill 0.25s ease, stroke 0.25s ease, opacity 0.25s ease;
   }
 
   &--lit {
@@ -149,12 +155,13 @@ function petalAngles(group: ChallengeGroup): number[] {
     }
 
     .flower__center {
-      fill: #f5d000;
+      fill: #fff8e7;
+      stroke: #6d4c2a;
       opacity: 1;
     }
 
     svg {
-      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.12));
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.14));
     }
   }
 }

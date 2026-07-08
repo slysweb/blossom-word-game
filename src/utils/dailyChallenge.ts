@@ -1,8 +1,5 @@
 import { isPangram } from "@/utils/puzzle";
 
-/** Daily challenges begin on this calendar date (US Eastern puzzle day). */
-export const CHALLENGE_START = "2026-07-08";
-
 export type ChallengeCategory = "len4" | "len5" | "len6" | "pangram";
 
 export interface FlowerSlot {
@@ -48,7 +45,7 @@ export const PETAL_COUNT: Record<ChallengeCategory, number> = {
 export const PETAL_PALETTE = [
   "#FF6B6B",
   "#FF8E53",
-  "#FFD93D",
+  "#FFC107",
   "#6BCB77",
   "#4ECDC4",
   "#4D96FF",
@@ -66,10 +63,6 @@ const LABEL_KEYS: Record<ChallengeCategory, string> = {
 
 export function petalColorsFor(category: ChallengeCategory): string[] {
   return PETAL_PALETTE.slice(0, PETAL_COUNT[category]);
-}
-
-export function isChallengeActive(dateKey: string): boolean {
-  return dateKey >= CHALLENGE_START;
 }
 
 export function puzzleHasPangram(answers: string[]): boolean {

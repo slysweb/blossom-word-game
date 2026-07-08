@@ -77,7 +77,7 @@ watch(
 );
 
 function maybeCelebrateChallenge(): void {
-  if (isArchive.value || !game.isToday || !game.dailyChallenge?.complete) return;
+  if (!game.dailyChallenge?.complete) return;
   if (challengeCelebrated.value[game.gameDateString]) return;
   showChallengeWon.value = true;
 }
@@ -156,7 +156,7 @@ function dismissChallengeWon(): void {
         </template>
       </div>
 
-      <DailyChallenge v-if="!isArchive && ready && !error" />
+      <DailyChallenge v-if="ready && !error" />
     </div>
 
     <template v-if="!isArchive">
@@ -229,19 +229,19 @@ function dismissChallengeWon(): void {
   justify-content: center;
   gap: 1.25rem;
   margin: 1rem auto 0;
-  max-width: 980px;
+  max-width: 960px;
   padding: 0 0.5rem;
 }
 
 .game-card {
   position: relative;
-  flex: 1 1 720px;
+  flex: 1 1 560px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-lg);
   padding: 1.25rem 1.25rem 1.75rem;
-  max-width: 720px;
+  max-width: 560px;
   min-width: 0;
 }
 
