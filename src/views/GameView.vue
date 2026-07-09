@@ -111,9 +111,14 @@ function dismissChallengeWon(): void {
       <RouterLink to="/" class="pill-link">Play today →</RouterLink>
     </div>
 
-    <h2>
-      {{ isArchive ? `Puzzle for ${game.gameDateString}` : "Blossom Word Game of Today" }}
-    </h2>
+    <div class="game-heading">
+      <h2>
+        {{ isArchive ? `Puzzle for ${game.gameDateString}` : "Blossom Word Game of Today" }}
+      </h2>
+      <p v-if="!isArchive" class="game-heading__subtitle">
+        Hunt words, blossom flowers.
+      </p>
+    </div>
 
     <div class="game-play">
       <div
@@ -213,6 +218,22 @@ function dismissChallengeWon(): void {
   justify-content: space-between;
   max-width: 720px;
   margin: 0 auto 0.5rem;
+}
+
+.game-heading {
+  text-align: center;
+  margin-bottom: 0.25rem;
+}
+
+.game-heading h2 {
+  margin: 0;
+}
+
+.game-heading__subtitle {
+  margin: 0.35rem 0 0;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.5;
 }
 
 .pill-link {
