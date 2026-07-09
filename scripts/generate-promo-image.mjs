@@ -1,6 +1,6 @@
 /**
  * Generate 1200×630 promo image: hive (left) + fully bloomed daily challenge (right).
- * Output: public/images/blossom-promo-1200x630.png (+ .svg)
+ * Output: public/images/blossom-promo-1200x630.png (+ public/og.png)
  */
 import { writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -60,47 +60,59 @@ function hexAt(x, y, scale, letter, fill, stroke = "#ffffff") {
   </g>`;
 }
 
-// Hive letters from reference screenshot
-const hiveLetters = [
-  { letter: "H", x: 248, y: 248, fill: "#fce303" },
-  { letter: "E", x: 248, y: 118, fill: "#e6e6e6" },
-  { letter: "I", x: 378, y: 183, fill: "#e6e6e6" },
-  { letter: "K", x: 378, y: 313, fill: "#e6e6e6" },
-  { letter: "S", x: 248, y: 378, fill: "#e6e6e6" },
-  { letter: "T", x: 118, y: 313, fill: "#e6e6e6" },
-  { letter: "A", x: 118, y: 183, fill: "#e6e6e6" },
-];
+/** Match in-game hive offsets: same base cell with CSS translate percentages. */
+function buildHive(centerX, centerY, scale) {
+  const hexW = 120 * scale;
+  const hexH = 104 * scale;
+  const bx = centerX - hexW / 2;
+  const by = centerY - hexH / 2;
 
-const hexScale = 1.35;
-const hexes = hiveLetters
-  .map(({ letter, x, y, fill }) => hexAt(x, y, hexScale, letter, fill))
-  .join("\n");
+  const slots = [
+    { letter: "H", dx: 0, dy: 0, fill: "#fce303" },
+    { letter: "E", dx: 0, dy: -hexH, fill: "#e6e6e6" },
+    { letter: "I", dx: hexW * 0.75, dy: -hexH * 0.5, fill: "#e6e6e6" },
+    { letter: "K", dx: hexW * 0.75, dy: hexH * 0.5, fill: "#e6e6e6" },
+    { letter: "S", dx: 0, dy: hexH, fill: "#e6e6e6" },
+    { letter: "T", dx: -hexW * 0.75, dy: hexH * 0.5, fill: "#e6e6e6" },
+    { letter: "A", dx: -hexW * 0.75, dy: -hexH * 0.5, fill: "#e6e6e6" },
+  ];
 
-const flowerSize = 52;
-const flowerGap = 8;
-const panelX = 640;
-const panelY = 72;
-const panelW = 520;
-const panelH = 486;
+  return slots
+    .map(({ letter, dx, dy, fill }) =>
+      hexAt(bx + dx, by + dy, scale, letter, fill),
+    )
+    .join("\n");
+}
 
-let y = panelY + 88;
+const hexScale = 1.42;
+const hexes = buildHive(300, 290, hexScale);
+
+const flowerSize = 46;
+const flowerGap = 7;
+const challengeX = 620;
+const challengeW = 560;
+const labelHeight = 18;
+const labelGap = 18;
+const rowGap = 22;
+
+let y = 44;
 const challengeRows = GROUPS.map((group) => {
   const rowWidth = group.count * flowerSize + (group.count - 1) * flowerGap;
-  const startX = panelX + (panelW - rowWidth) / 2;
+  const startX = challengeX + (challengeW - rowWidth) / 2;
   const flowers = Array.from({ length: group.count }, (_, i) =>
     flowerAt(
       startX + i * (flowerSize + flowerGap),
-      y + 28,
+      y + labelHeight + labelGap,
       flowerSize,
       group.petals,
       group.center,
     ),
   ).join("");
   const row = `
-    <text x="${panelX + panelW / 2}" y="${y}" text-anchor="middle" font-family="Nunito, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="0.08em" fill="#6b6b76">${group.label}</text>
+    <text x="${challengeX + challengeW / 2}" y="${y + 14}" text-anchor="middle" font-family="Nunito, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="0.08em" fill="#6b6b76">${group.label}</text>
     ${flowers}
   `;
-  y += 28 + flowerSize + 36;
+  y += labelHeight + labelGap + flowerSize + rowGap;
   return row;
 }).join("");
 
@@ -113,30 +125,15 @@ const svg = `<?xml version="1.0" encoding="UTF-8"?>
     <filter id="flowerShadow" x="-30%" y="-30%" width="160%" height="160%">
       <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.14"/>
     </filter>
-    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%">
-      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-opacity="0.1"/>
-    </filter>
   </defs>
 
   <rect width="${W}" height="${H}" fill="#fffef8"/>
 
-  <!-- Left card: hive -->
-  <g filter="url(#cardShadow)">
-    <rect x="48" y="48" width="544" height="534" rx="16" fill="#ffffff" stroke="rgba(20,20,30,0.08)"/>
-  </g>
   ${hexes}
 
-  <!-- Right card: Today's Challenge (all bloomed) -->
-  <g filter="url(#cardShadow)">
-    <rect x="${panelX}" y="${panelY}" width="${panelW}" height="${panelH}" rx="16" fill="#ffffff" stroke="rgba(20,20,30,0.08)"/>
-  </g>
-  <text x="${panelX + panelW / 2}" y="${panelY + 42}" text-anchor="middle" font-family="Fredoka, Nunito, Arial, sans-serif" font-size="28" font-weight="600" fill="#23232b">Today's Challenge</text>
-  <text x="${panelX + panelW / 2}" y="${panelY + 68}" text-anchor="middle" font-family="Nunito, Arial, sans-serif" font-size="13" fill="#6b6b76">15 / 15 bloomed</text>
   ${challengeRows}
-  <text x="${panelX + panelW / 2}" y="${panelY + panelH - 28}" text-anchor="middle" font-family="Nunito, Arial, sans-serif" font-size="16" font-weight="700" fill="#e0ca00">Challenge complete! 🌸</text>
 
-  <!-- Brand -->
-  <text x="${W / 2}" y="${H - 24}" text-anchor="middle" font-family="Fredoka, Nunito, Arial, sans-serif" font-size="22" font-weight="600" fill="#23232b">Blossom Word Game · blossomword.com</text>
+  <text x="${W / 2}" y="${H - 28}" text-anchor="middle" font-family="Fredoka, Nunito, Arial, sans-serif" font-size="22" font-weight="600" fill="#23232b">Blossom Word Game · blossomword.com</text>
 </svg>`;
 
 const svgPath = join(outDir, "blossom-promo-1200x630.svg");
