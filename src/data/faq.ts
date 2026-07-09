@@ -49,6 +49,16 @@ export const faqs: FaqItem[] = [
     answer:
       "All saved data stays in your browser's local storage — we do not store it on a server. To reset everything for blossomword.com, open your browser settings and clear site data (sometimes called cookies and site data) for this website. That removes found words, scores, challenge progress, and theme preference. In Chrome: Settings → Privacy and security → Delete browsing data → choose Cookies and other site data, or use \"See all site data and permissions\" and remove blossomword.com. In Safari: Settings → Privacy → Manage Website Data. In Firefox: Settings → Privacy & Security → Cookies and Site Data → Manage Data. After clearing, reload the page and you will start fresh.",
   },
+  {
+    question: "How is Blossom Word Game different from Merriam-Webster's Blossom?",
+    answer:
+      "Blossom Word Game is based on the New York Times Spelling Bee — Merriam-Webster's Blossom draws from the same kind of puzzle too. The first version of this site was built on the open-source Spelling Bee project by Conor Sheehan (github.com/ConorSheehan1/spelling-bee). We were creatively inspired by Merriam-Webster's Blossom, but our question bank, Today's Challenge rules, and page design are entirely our own. Our daily challenge — blooming flowers with different petal counts as you find words of each length — is an original feature created for blossomword.com.",
+  },
+  {
+    question: "What time does the daily puzzle update?",
+    answer:
+      "A new puzzle becomes available at midnight US Eastern Time (America/New_York). That is when the calendar day changes in the game's reference timezone, so everyone sees the same daily hive once that date begins in Eastern Time.",
+  },
 ];
 
 export function faqJsonLd(): object {
