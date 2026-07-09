@@ -21,6 +21,7 @@ single‑page app and deployed on Cloudflare.
 ## Features
 
 - **Daily puzzle** — deterministic per calendar day so everyone gets the same hive.
+- **Today's Challenge** — bloom flowers by finding 4‑ through 7‑letter words and a pangram; rows adjust to each puzzle's answers.
 - **Hive input** — click letters or use the keyboard; delete / shuffle / enter.
 - **Scoring & ranks** — 4‑letter words = 1 pt, longer = 1 pt/letter, pangrams = +7.
   Tap the progress bar to see the score needed for each rank.

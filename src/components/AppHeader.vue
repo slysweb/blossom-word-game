@@ -9,7 +9,7 @@ const theme = useThemeStore();
     <div class="header__inner layout">
       <RouterLink to="/" class="brand" aria-label="Blossom Word Game home">
         <img
-          src="/logo.png"
+          src="/icon-192.png"
           alt="Blossom Word Game logo"
           class="brand__logo"
           width="40"

@@ -1,12 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
-  <rect width="120" height="120" rx="24" fill="#1c1b22" />
-  <g transform="translate(60 60)">
-    <polygon points="-26,0 -13,-22 13,-22 26,0 13,22 -13,22" fill="#e6e6e6" transform="translate(0 -36)" />
-    <polygon points="-26,0 -13,-22 13,-22 26,0 13,22 -13,22" fill="#e6e6e6" transform="translate(31 -18)" />
-    <polygon points="-26,0 -13,-22 13,-22 26,0 13,22 -13,22" fill="#e6e6e6" transform="translate(31 18)" />
-    <polygon points="-26,0 -13,-22 13,-22 26,0 13,22 -13,22" fill="#e6e6e6" transform="translate(0 36)" />
-    <polygon points="-26,0 -13,-22 13,-22 26,0 13,22 -13,22" fill="#e6e6e6" transform="translate(-31 18)" />
-    <polygon points="-26,0 -13,-22 13,-22 26,0 13,22 -13,22" fill="#e6e6e6" transform="translate(-31 -18)" />
-    <polygon points="-26,0 -13,-22 13,-22 26,0 13,22 -13,22" fill="#fce303" />
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <rect width="32" height="32" rx="6" fill="#fffef8"/>
+  <g transform="scale(1)" filter="url(#shadow)">
+    <ellipse cx="16" cy="8" rx="4" ry="6" fill="#FF6B6B" transform="rotate(0 16 16)"/>
+    <ellipse cx="16" cy="8" rx="4" ry="6" fill="#FF8E53" transform="rotate(51.42857142857143 16 16)"/>
+    <ellipse cx="16" cy="8" rx="4" ry="6" fill="#FFC107" transform="rotate(102.85714285714286 16 16)"/>
+    <ellipse cx="16" cy="8" rx="4" ry="6" fill="#6BCB77" transform="rotate(154.28571428571428 16 16)"/>
+    <ellipse cx="16" cy="8" rx="4" ry="6" fill="#4ECDC4" transform="rotate(205.71428571428572 16 16)"/>
+    <ellipse cx="16" cy="8" rx="4" ry="6" fill="#4D96FF" transform="rotate(257.14285714285717 16 16)"/>
+    <ellipse cx="16" cy="8" rx="4" ry="6" fill="#C77DFF" transform="rotate(308.57142857142856 16 16)"/>
+    <circle cx="16" cy="16" r="3.5" fill="#fff3a8" stroke="#b8860b" stroke-width="1.2"/>
   </g>
 </svg>

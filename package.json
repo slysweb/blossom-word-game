@@ -8,6 +8,7 @@
     "dev": "vite",
     "build:words": "node scripts/build-words.mjs",
     "generate:og": "node scripts/generate-promo-image.mjs",
+    "generate:favicon": "node scripts/generate-favicon.mjs",
     "build": "vue-tsc -b && vite-ssg build",
     "preview": "vite preview",
     "type-check": "vue-tsc -b --noEmit",

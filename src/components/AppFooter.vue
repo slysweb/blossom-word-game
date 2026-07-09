@@ -7,7 +7,7 @@ const GITHUB_URL = "https://github.com/slysweb/blossom-word-game";
   <footer class="footer">
     <div class="footer__inner layout">
       <div class="footer__brand">
-        <img src="/logo.png" alt="Blossom Word Game logo" width="32" height="32" />
+        <img src="/icon-192.png" alt="Blossom Word Game logo" width="32" height="32" />
         <span>Blossom Word Game</span>
       </div>
 
