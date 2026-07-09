@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build:words": "node scripts/build-words.mjs",
+    "generate:og": "node scripts/generate-promo-image.mjs",
     "build": "vue-tsc -b && vite-ssg build",
     "preview": "vite preview",
     "type-check": "vue-tsc -b --noEmit",
@@ -22,6 +23,7 @@
     "vue-router": "^5.1.0"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@types/node": "^25.9.3",
     "@unhead/vue": "^2.1.15",
     "@vitejs/plugin-vue": "^6.0.7",

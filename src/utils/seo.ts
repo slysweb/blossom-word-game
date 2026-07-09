@@ -23,6 +23,7 @@ export function buildHead(seo: RouteSeo) {
     { property: "og:description", content: seo.description },
     { property: "og:url", content: url },
     { property: "og:image", content: DEFAULT_OG_IMAGE },
+    { property: "og:image:alt", content: "Blossom Word Game hive and Today's Challenge flowers in bloom" },
     { property: "og:image:width", content: "1200" },
     { property: "og:image:height", content: "630" },
     { name: "twitter:card", content: "summary_large_image" },
