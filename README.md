@@ -66,10 +66,8 @@ npm run deploy     # build + wrangler deploy
 
 ### Continuous deployment
 
-Either connect the GitHub repo to Cloudflare (Workers & Pages → Create →
-import the repo, build command `npm run build`, output `dist`), or use the
-included GitHub Actions workflow (`.github/workflows/deploy.yml`), which needs
-the repository secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
+Connect the GitHub repo to Cloudflare (Workers & Pages → Create → import the
+repo, build command `npm run build`, deploy command `npx wrangler deploy`).
 
 ## Credits
 
