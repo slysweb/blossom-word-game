@@ -85,7 +85,7 @@ function buildHive(centerX, centerY, scale) {
 }
 
 const hexScale = 1.42;
-const hexes = buildHive(300, 290, hexScale);
+const hexes = buildHive(345, 290, hexScale);
 
 const flowerSize = 46;
 const flowerGap = 7;

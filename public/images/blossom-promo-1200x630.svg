@@ -11,31 +11,31 @@
 
   <rect width="1200" height="630" fill="#fffef8"/>
 
-  <g transform="translate(214.8,216.16) scale(1.42)" filter="url(#hexShadow)">
+  <g transform="translate(259.8,216.16) scale(1.42)" filter="url(#hexShadow)">
     <polygon points="0,52 30,0 90,0 120,52 90,104 30,104" fill="#fce303" stroke="#ffffff" stroke-width="7.5"/>
     <text x="60" y="58" text-anchor="middle" font-family="Fredoka, Nunito, Arial, sans-serif" font-size="32" font-weight="600" fill="#1a1a22">H</text>
   </g>
-<g transform="translate(214.8,68.47999999999999) scale(1.42)" filter="url(#hexShadow)">
+<g transform="translate(259.8,68.47999999999999) scale(1.42)" filter="url(#hexShadow)">
     <polygon points="0,52 30,0 90,0 120,52 90,104 30,104" fill="#e6e6e6" stroke="#ffffff" stroke-width="7.5"/>
     <text x="60" y="58" text-anchor="middle" font-family="Fredoka, Nunito, Arial, sans-serif" font-size="32" font-weight="600" fill="#1a1a22">E</text>
   </g>
-<g transform="translate(342.6,142.32) scale(1.42)" filter="url(#hexShadow)">
+<g transform="translate(387.6,142.32) scale(1.42)" filter="url(#hexShadow)">
     <polygon points="0,52 30,0 90,0 120,52 90,104 30,104" fill="#e6e6e6" stroke="#ffffff" stroke-width="7.5"/>
     <text x="60" y="58" text-anchor="middle" font-family="Fredoka, Nunito, Arial, sans-serif" font-size="32" font-weight="600" fill="#1a1a22">I</text>
   </g>
-<g transform="translate(342.6,290) scale(1.42)" filter="url(#hexShadow)">
+<g transform="translate(387.6,290) scale(1.42)" filter="url(#hexShadow)">
     <polygon points="0,52 30,0 90,0 120,52 90,104 30,104" fill="#e6e6e6" stroke="#ffffff" stroke-width="7.5"/>
     <text x="60" y="58" text-anchor="middle" font-family="Fredoka, Nunito, Arial, sans-serif" font-size="32" font-weight="600" fill="#1a1a22">K</text>
   </g>
-<g transform="translate(214.8,363.84000000000003) scale(1.42)" filter="url(#hexShadow)">
+<g transform="translate(259.8,363.84000000000003) scale(1.42)" filter="url(#hexShadow)">
     <polygon points="0,52 30,0 90,0 120,52 90,104 30,104" fill="#e6e6e6" stroke="#ffffff" stroke-width="7.5"/>
     <text x="60" y="58" text-anchor="middle" font-family="Fredoka, Nunito, Arial, sans-serif" font-size="32" font-weight="600" fill="#1a1a22">S</text>
   </g>
-<g transform="translate(87.00000000000003,290) scale(1.42)" filter="url(#hexShadow)">
+<g transform="translate(132.00000000000003,290) scale(1.42)" filter="url(#hexShadow)">
     <polygon points="0,52 30,0 90,0 120,52 90,104 30,104" fill="#e6e6e6" stroke="#ffffff" stroke-width="7.5"/>
     <text x="60" y="58" text-anchor="middle" font-family="Fredoka, Nunito, Arial, sans-serif" font-size="32" font-weight="600" fill="#1a1a22">T</text>
   </g>
-<g transform="translate(87.00000000000003,142.32) scale(1.42)" filter="url(#hexShadow)">
+<g transform="translate(132.00000000000003,142.32) scale(1.42)" filter="url(#hexShadow)">
     <polygon points="0,52 30,0 90,0 120,52 90,104 30,104" fill="#e6e6e6" stroke="#ffffff" stroke-width="7.5"/>
     <text x="60" y="58" text-anchor="middle" font-family="Fredoka, Nunito, Arial, sans-serif" font-size="32" font-weight="600" fill="#1a1a22">A</text>
   </g>
