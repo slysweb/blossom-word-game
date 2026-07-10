@@ -8,15 +8,36 @@ defineProps<{
 }>();
 
 const showModal = ref(false);
+/** Blocks rapid re-clicks while the modal is opening or already open. */
+const locked = ref(false);
+
+function openShare(): void {
+  if (showModal.value || locked.value) return;
+  locked.value = true;
+  showModal.value = true;
+}
+
+function onModalUpdate(open: boolean): void {
+  showModal.value = open;
+  if (open) return;
+  // Short cooldown after close so a double-tap cannot reopen instantly.
+  window.setTimeout(() => {
+    locked.value = false;
+  }, 600);
+}
 </script>
 
 <template>
-  <button class="share-btn" type="button" @click="showModal = true">
+  <button
+    class="share-btn"
+    type="button"
+    :disabled="showModal || locked"
+    @click="openShare">
     <span class="share-btn__icon" aria-hidden="true">🔗</span>
     {{ $t("Share your result") }}
   </button>
 
-  <ShareModal v-model="showModal" :text="text" />
+  <ShareModal :model-value="showModal" :text="text" @update:model-value="onModalUpdate" />
 </template>
 
 <style scoped lang="scss">
@@ -35,15 +56,21 @@ const showModal = ref(false);
   padding: 0.6rem 1.4rem;
   cursor: pointer;
   box-shadow: 0 4px 14px var(--primary-soft);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
 
-  &:hover {
+  &:hover:not(:disabled) {
     transform: translateY(-1px);
     box-shadow: 0 6px 18px var(--primary-soft);
   }
 
-  &:active {
+  &:active:not(:disabled) {
     transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    box-shadow: none;
   }
 }
 
