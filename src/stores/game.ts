@@ -112,10 +112,47 @@ export const useGameStore = defineStore("game", () => {
     () => correctGuessesList.value.filter((w) => isPangram(w)).length,
   );
 
+  /** Per-date hint usage (0–3). Resets implicitly when the date key is absent. */
+  const hintsUsed = useStorage<Record<string, number>>("hintsUsed", {});
+
+  /** Letters to pre-fill the guess input after using a hint. */
+  const hintDraft = ref("");
+
+  const hintsUsedForActiveDate = computed(
+    () => hintsUsed.value[activeKey.value] ?? 0,
+  );
+  const hintsRemaining = computed(() =>
+    Math.max(0, 3 - hintsUsedForActiveDate.value),
+  );
+
   /** Word-length flower challenge for the active puzzle. */
   const dailyChallenge = computed(() =>
     buildChallengeState(correctGuessesList.value, answers.value),
   );
+
+  /** Pick an unfound answer and reveal its first three letters. Returns status. */
+  function useHint(): "ok" | "empty" | "exhausted" {
+    const used = hintsUsedForActiveDate.value;
+    if (used >= 3) return "exhausted";
+
+    const unfound = answers.value.filter(
+      (word) => !correctGuessesList.value.includes(word),
+    );
+    if (unfound.length === 0) return "empty";
+
+    const word = unfound[Math.floor(Math.random() * unfound.length)]!;
+    hintDraft.value = word.slice(0, 3);
+
+    hintsUsed.value = {
+      ...hintsUsed.value,
+      [activeKey.value]: used + 1,
+    };
+    return "ok";
+  }
+
+  function clearHintDraft(): void {
+    hintDraft.value = "";
+  }
 
   /** A no-spoiler, Wordle-style result string for sharing. */
   const shareText = computed(() => {
@@ -247,9 +284,14 @@ export const useGameStore = defineStore("game", () => {
     puzzleNo,
     rankLabel,
     pangramCount,
+    hintsUsedForActiveDate,
+    hintsRemaining,
+    hintDraft,
     dailyChallenge,
     shareText,
     challengeShareText,
+    useHint,
+    clearHintDraft,
     submitGuess,
     ensureLoaded,
     openDate,

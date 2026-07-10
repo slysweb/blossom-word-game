@@ -57,6 +57,10 @@
     "amazing": "Amazing",
     "awesome": "Awesome"
   },
+  "hint": {
+    "use": "Use hint",
+    "noWords": "No more words to hint"
+  },
   "challenge": {
     "title": "Today's Challenge",
     "desc": "Find 4- through 7-letter words to bloom each row, then bloom the seven-color flower with a pangram. Rows adjust to each puzzle's answers.",

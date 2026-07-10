@@ -125,6 +125,12 @@ https://blossomword.com</pre>
       <li>Look for the pangram early &mdash; it is the biggest single score boost.</li>
       <li>Try common prefixes and suffixes such as <em>-ing</em>, <em>-ed</em> and <em>-s</em>.</li>
       <li>Reuse letters: long words from few letters score the most.</li>
+      <li>
+        Need a nudge? Tap a <strong>hint</strong> (💡) between the puzzle date and
+        Yesterday's Answer. You get <strong>3 hints per puzzle per day</strong>; each
+        one fills the input with the first three letters of a random word you have
+        not found yet, then that hint icon disappears.
+      </li>
       <li>Stuck? Open the <strong>Blossom Solver</strong> to reveal every answer.</li>
     </ul>
 

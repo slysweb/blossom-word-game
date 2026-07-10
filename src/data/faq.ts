@@ -30,6 +30,11 @@ export const faqs: FaqItem[] = [
       "Yes. A brand new puzzle is generated every day, and everyone plays the same daily hive. Your progress is saved in your browser, so you can come back and continue.",
   },
   {
+    question: "Why did you add hints?",
+    answer:
+      "Many players are not native English speakers — they are learners. Three hints per puzzle lower the difficulty and help more people complete Today's Challenge. Each hint fills the input with the first three letters of a word you have not found yet. If you are an expert, you can use hints only when you are stuck, or skip them entirely.",
+  },
+  {
     question: "What is the Blossom Solver?",
     answer:
       "The Blossom Solver is a built-in word finder. Enter the center letter and the six outer letters, and it lists every valid word for that combination to help you when you are stuck.",

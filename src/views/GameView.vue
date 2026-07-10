@@ -15,6 +15,7 @@ import FaqSection from "@/components/FaqSection.vue";
 import BaseModal from "@/components/BaseModal.vue";
 import ShareButton from "@/components/ShareButton.vue";
 import DailyChallenge from "@/components/DailyChallenge.vue";
+import HintButtons from "@/components/HintButtons.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -133,7 +134,8 @@ function dismissChallengeWon(): void {
 
           <template v-else>
             <div class="game-card__top">
-              <span>#{{ game.puzzleNo }} · {{ game.gameDateString }}</span>
+              <span class="game-card__meta">#{{ game.puzzleNo }} · {{ game.gameDateString }}</span>
+              <HintButtons />
               <span class="yesterday-link" @click="showYesterday = true">
                 👁 {{ $t("Yesterday") }} {{ $t("Answer") }}
               </span>
@@ -307,7 +309,7 @@ function dismissChallengeWon(): void {
   margin-bottom: 0.5rem;
 }
 
-.game-card__top > span:first-child {
+.game-card__top > .game-card__meta {
   font-weight: 700;
   color: var(--text-muted);
   background: var(--surface-alt);
@@ -315,6 +317,11 @@ function dismissChallengeWon(): void {
   border-radius: 999px;
   padding: 0.25rem 0.75rem;
   font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.game-card__top > .yesterday-link {
+  flex-shrink: 0;
 }
 
 .yesterday-link {

@@ -27,6 +27,16 @@ watch(
   },
 );
 
+watch(
+  () => game.hintDraft,
+  (draft) => {
+    if (draft) {
+      userGuess.value = draft;
+      game.clearHintDraft();
+    }
+  },
+);
+
 function addLetter(letter: string): void {
   userGuess.value += letter;
 }
