@@ -28,6 +28,18 @@
   "Share": "Share",
   "Share your result": "Share your result",
   "Copied to clipboard": "Copied to clipboard!",
+  "share": {
+    "subtitle": "{found}/{total} words · {score} pts — challenge a friend!",
+    "postTo": "Post to",
+    "copyImage": "Copy image",
+    "copyLink": "Copy link",
+    "more": "More",
+    "generating": "Generating your card…",
+    "cardAlt": "Blossom Word Game result card",
+    "cardError": "Could not generate share image",
+    "imageCopied": "Image copied to clipboard!",
+    "imageDownloaded": "Image downloaded"
+  },
   "Congratulations": "Congratulations!",
   "GeniusMessage": "You're a spelling Genius!",
   "Center Letter": "Center Letter",

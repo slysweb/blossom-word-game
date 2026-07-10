@@ -303,13 +303,17 @@ function dismissChallengeWon(): void {
 }
 
 .game-card__top {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: "meta hints yesterday";
   align-items: center;
-  justify-content: space-between;
+  column-gap: 0.5rem;
+  row-gap: 0.45rem;
   margin-bottom: 0.5rem;
 }
 
-.game-card__top > .game-card__meta {
+.game-card__meta {
+  grid-area: meta;
   font-weight: 700;
   color: var(--text-muted);
   background: var(--surface-alt);
@@ -317,14 +321,16 @@ function dismissChallengeWon(): void {
   border-radius: 999px;
   padding: 0.25rem 0.75rem;
   font-size: 0.85rem;
-  flex-shrink: 0;
+  justify-self: start;
 }
 
-.game-card__top > .yesterday-link {
-  flex-shrink: 0;
+.game-card__top :deep(.hints) {
+  grid-area: hints;
 }
 
 .yesterday-link {
+  grid-area: yesterday;
+  justify-self: end;
   cursor: pointer;
   font-weight: 700;
   font-size: 0.85rem;
@@ -468,6 +474,17 @@ function dismissChallengeWon(): void {
     min-height: 0;
     margin: 0.5rem 0 0;
     padding: 0.5rem 0.5rem 1rem;
+  }
+
+  .game-card__top {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "meta yesterday"
+      "hints hints";
+  }
+
+  .game-card__top :deep(.hints) {
+    justify-content: center;
   }
 
   .game-found {

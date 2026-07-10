@@ -154,6 +154,19 @@ export const useGameStore = defineStore("game", () => {
     hintDraft.value = "";
   }
 
+  /** Share link for the active puzzle. */
+  const shareUrl = computed(() =>
+    isToday.value ? SITE_URL : `${SITE_URL}/play/${activeKey.value}`,
+  );
+
+  /** Outer hive letters in stable order for share images. */
+  const sortedOuterLetters = computed(() =>
+    availableLetters.value
+      .split("")
+      .filter((l) => l !== middleLetter.value)
+      .sort(),
+  );
+
   /** A no-spoiler, Wordle-style result string for sharing. */
   const shareText = computed(() => {
     // Bloomed flowers vs buds; show at least one bloom once the player scores.
@@ -165,12 +178,11 @@ export const useGameStore = defineStore("game", () => {
       pangramCount.value > 0
         ? ` · ${pangramCount.value} ${t("pangrams", pangramCount.value)}`
         : "";
-    const link = isToday.value ? SITE_URL : `${SITE_URL}/play/${activeKey.value}`;
     return [
       `🌸 Blossom Word Game #${puzzleNo.value}`,
       `${bar} ${rankLabel.value}`,
       `${words}${pangrams} · ${userScore.value} ${t("pts")}`,
-      link,
+      shareUrl.value,
     ].join("\n");
   });
 
@@ -289,6 +301,8 @@ export const useGameStore = defineStore("game", () => {
     hintDraft,
     dailyChallenge,
     shareText,
+    shareUrl,
+    sortedOuterLetters,
     challengeShareText,
     useHint,
     clearHintDraft,

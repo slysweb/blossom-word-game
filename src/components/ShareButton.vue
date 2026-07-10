@@ -1,65 +1,22 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useI18n } from "vue-i18n";
-import { useGameStore } from "@/stores/game";
-import { useToast } from "@/composables/useToast";
+import ShareModal from "@/components/ShareModal.vue";
 
-const props = defineProps<{
+defineProps<{
   /** Override the default share text from the game store. */
   text?: string;
 }>();
 
-const game = useGameStore();
-const toast = useToast();
-const { t } = useI18n();
-
-const copied = ref(false);
-
-/** Touch/phone devices benefit from the native share sheet; desktop prefers copy. */
-function isMobileDevice(): boolean {
-  if (typeof navigator === "undefined") return false;
-  if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) return true;
-  return (
-    navigator.maxTouchPoints > 0 &&
-    typeof matchMedia !== "undefined" &&
-    matchMedia("(pointer: coarse)").matches
-  );
-}
-
-async function copyToClipboard(text: string): Promise<void> {
-  try {
-    await navigator.clipboard.writeText(text);
-    copied.value = true;
-    toast.show(t("Copied to clipboard"), "success");
-    setTimeout(() => (copied.value = false), 2000);
-  } catch {
-    toast.show(text);
-  }
-}
-
-async function share(): Promise<void> {
-  const text = props.text ?? game.shareText;
-
-  // Native share sheet on mobile; straight clipboard copy on desktop.
-  if (isMobileDevice() && navigator.share) {
-    try {
-      await navigator.share({ title: "Blossom Word Game", text });
-      return;
-    } catch (err) {
-      // User dismissed the share sheet - don't fall through to copy.
-      if (err instanceof DOMException && err.name === "AbortError") return;
-    }
-  }
-
-  await copyToClipboard(text);
-}
+const showModal = ref(false);
 </script>
 
 <template>
-  <button class="share-btn" type="button" @click="share">
-    <span class="share-btn__icon" aria-hidden="true">{{ copied ? "✓" : "🔗" }}</span>
-    {{ copied ? $t("Copied to clipboard") : $t("Share your result") }}
+  <button class="share-btn" type="button" @click="showModal = true">
+    <span class="share-btn__icon" aria-hidden="true">🔗</span>
+    {{ $t("Share your result") }}
   </button>
+
+  <ShareModal v-model="showModal" :text="text" />
 </template>
 
 <style scoped lang="scss">
