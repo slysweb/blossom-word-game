@@ -286,7 +286,8 @@ function drawShareLines(
     const line = lines[index]!;
     const isUrl = line.startsWith("http");
     const isTitle = index === 0;
-    const lineX = x;
+    // Optical alignment: emoji lines sit slightly wider than plain text.
+    const lineX = index === 2 ? x + 1 : index === 3 ? x + 2 : x;
 
     if (isTitle) {
       ctx.font = `700 14px ${FONT_BODY}`;
