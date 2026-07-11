@@ -286,8 +286,7 @@ function drawShareLines(
     const line = lines[index]!;
     const isUrl = line.startsWith("http");
     const isTitle = index === 0;
-    // Stats + URL sit slightly inset from the title/rank lines.
-    const lineX = index >= 2 ? x + 5 : x;
+    const lineX = x;
 
     if (isTitle) {
       ctx.font = `700 14px ${FONT_BODY}`;
@@ -340,7 +339,8 @@ async function drawFooterContent(
   // Sit lower in the footer band (closer to the bottom edge).
   const blockTop = footerY + footerH - qrBox - 18;
 
-  drawShareLines(ctx, lines, groupLeft, blockTop + 9, textW + 4, lineHeight);
+  // Nudge copy left; keep QR on the group’s right edge.
+  drawShareLines(ctx, lines, groupLeft - 10, blockTop + 9, textW + 4, lineHeight);
 
   const qrX = groupLeft + textW + gap;
   const qrY = blockTop;
