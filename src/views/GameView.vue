@@ -71,16 +71,30 @@ watch(
   () => game.isComplete,
   (complete) => {
     // Only celebrate automatically for today's puzzle.
-    if (complete && game.isToday && !wonDismissed.value && !showChallengeWon.value) {
+    if (complete && game.isToday && !wonDismissed.value) {
       showWon.value = true;
     }
   },
 );
 
+let challengeFireworksTimer: ReturnType<typeof setTimeout> | null = null;
+
 function maybeCelebrateChallenge(): void {
   if (!game.dailyChallenge?.complete) return;
   if (challengeCelebrated.value[game.gameDateString]) return;
+
   showChallengeWon.value = true;
+  challengeCelebrated.value = {
+    ...challengeCelebrated.value,
+    [game.gameDateString]: true,
+  };
+
+  if (challengeFireworksTimer) clearTimeout(challengeFireworksTimer);
+  // Keep fireworks for a few seconds, then stop — no modal.
+  challengeFireworksTimer = setTimeout(() => {
+    showChallengeWon.value = false;
+    challengeFireworksTimer = null;
+  }, 5500);
 }
 
 watch(
@@ -93,14 +107,6 @@ watch(
 watch(ready, (isReady) => {
   if (isReady) maybeCelebrateChallenge();
 });
-
-function dismissChallengeWon(): void {
-  showChallengeWon.value = false;
-  challengeCelebrated.value = {
-    ...challengeCelebrated.value,
-    [game.gameDateString]: true,
-  };
-}
 </script>
 
 <template>
@@ -192,22 +198,6 @@ function dismissChallengeWon(): void {
     <h2>{{ $t("GeniusMessage") }}</h2>
     <div class="won-share">
       <ShareButton />
-    </div>
-  </BaseModal>
-
-  <BaseModal
-    v-model="showChallengeWon"
-    :title="$t('challenge.wonTitle')"
-    @closed="dismissChallengeWon">
-    <p class="challenge-won__message">{{ $t("challenge.wonMessage") }}</p>
-    <div class="challenge-won__flowers" aria-hidden="true">
-      {{ "🌸".repeat(game.dailyChallenge?.totalCount ?? 0) }}
-    </div>
-    <div class="challenge-won__actions">
-      <ShareButton :text="game.challengeShareText" />
-      <button class="continue-btn" type="button" @click="dismissChallengeWon">
-        {{ $t("challenge.continuePlay") }}
-      </button>
     </div>
   </BaseModal>
 </template>
@@ -369,59 +359,6 @@ function dismissChallengeWon(): void {
 .won-share {
   margin-top: 1rem;
   text-align: center;
-}
-
-.challenge-won__message {
-  margin: 0;
-  text-align: center;
-  font-size: 1.05rem;
-  line-height: 1.6;
-  color: var(--text);
-}
-
-.challenge-won__flowers {
-  margin: 1rem 0 1.25rem;
-  text-align: center;
-  font-size: 1.25rem;
-  letter-spacing: 0.12em;
-  line-height: 1.8;
-  animation: challenge-bloom 0.6s ease-out;
-}
-
-@keyframes challenge-bloom {
-  from {
-    opacity: 0;
-    transform: scale(0.85);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.challenge-won__actions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.continue-btn {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1rem;
-  color: var(--text);
-  background: var(--surface-alt);
-  border: 1px solid var(--border-strong);
-  border-radius: 999px;
-  padding: 0.6rem 1.4rem;
-  cursor: pointer;
-  transition: all 0.15s ease;
-
-  &:hover {
-    border-color: var(--primary);
-    background: var(--primary-soft);
-  }
 }
 
 .reveal {
