@@ -17,6 +17,12 @@ const otherLetters = ref<string[]>(
   outerOf(game.availableLetters, game.middleLetter),
 );
 const userGuess = ref("");
+/** Display letters as uppercase (default) or lowercase. */
+const uppercase = ref(true);
+
+function toggleCase(): void {
+  uppercase.value = !uppercase.value;
+}
 
 // Re-sync the hive when the active puzzle changes (e.g. archive navigation).
 watch(
@@ -68,7 +74,9 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
 </script>
 
 <template>
-  <div class="hive-controls">
+  <div
+    class="hive-controls"
+    :class="{ 'hive-controls--lower': !uppercase }">
     <div class="user-guess" :class="{ 'user-guess--empty': !userGuess }">
       <template v-if="!userGuess">
         <span class="user-guess__hint">{{ $t("Type or click") }}</span>
@@ -115,25 +123,37 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
     </div>
 
     <div class="hive-actions">
-      <button class="action action--text" @click="deleteLetter">
+      <button class="action action--text" type="button" @click="deleteLetter">
         {{ $t("Delete") }}
       </button>
-      <button
-        class="action action--icon"
-        :aria-label="$t('Shuffle')"
-        @click="shuffleLetters"
-        type="button">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round">
-          <path d="M16 3h5v5" />
-          <path d="M4 20 21 3" />
-          <path d="M21 16v5h-5" />
-          <path d="m15 15 6 6" />
-          <path d="M4 4l5 5" />
-        </svg>
-      </button>
-      <button class="action action--text action--primary" @click="submit">
+      <div class="hive-actions__icons">
+        <button
+          class="action action--icon action--case"
+          type="button"
+          :aria-label="$t('Toggle case')"
+          :aria-pressed="!uppercase"
+          @click="toggleCase">
+          <span class="case-label" aria-hidden="true">
+            <span class="case-label__upper">A</span><span class="case-label__lower">a</span>
+          </span>
+        </button>
+        <button
+          class="action action--icon"
+          type="button"
+          :aria-label="$t('Shuffle')"
+          @click="shuffleLetters">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M16 3h5v5" />
+            <path d="M4 20 21 3" />
+            <path d="M21 16v5h-5" />
+            <path d="m15 15 6 6" />
+            <path d="M4 4l5 5" />
+          </svg>
+        </button>
+      </div>
+      <button class="action action--text action--primary" type="button" @click="submit">
         {{ $t("Enter") }}
       </button>
     </div>
@@ -166,6 +186,16 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
 
   .is-middle {
     color: var(--primary-dark);
+  }
+}
+
+.hive-controls--lower {
+  .user-guess {
+    text-transform: lowercase;
+  }
+
+  .cell-letter {
+    text-transform: lowercase;
   }
 }
 
@@ -294,6 +324,14 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.hive-actions__icons {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
 }
 
 .action {
@@ -321,15 +359,8 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
 
 .action--text {
   flex: 1;
-  margin: 0 12px;
-  min-width: 5.5em;
-
-  &:first-child {
-    margin-left: 0;
-  }
-  &:last-child {
-    margin-right: 0;
-  }
+  min-width: 4.5em;
+  margin: 0;
 }
 
 .action--primary {
@@ -349,5 +380,39 @@ onUnmounted(() => window.removeEventListener("keyup", onKeyup));
   justify-content: center;
   height: 50px;
   min-width: 50px;
+  padding: 0;
+}
+
+.action--case {
+  font-family: var(--font-display);
+}
+
+.case-label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1px;
+  line-height: 1;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+}
+
+.case-label__upper {
+  font-size: 1em;
+}
+
+.case-label__lower {
+  font-size: 0.82em;
+  opacity: 0.55;
+}
+
+.hive-controls--lower .case-label__upper {
+  opacity: 0.55;
+  font-size: 0.82em;
+}
+
+.hive-controls--lower .case-label__lower {
+  opacity: 1;
+  font-size: 1em;
 }
 </style>
