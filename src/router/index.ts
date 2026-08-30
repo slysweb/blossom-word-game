@@ -6,7 +6,7 @@ import AboutView from "@/views/AboutView.vue";
 import PrivacyView from "@/views/PrivacyView.vue";
 import TermsView from "@/views/TermsView.vue";
 import type { RouteSeo } from "@/utils/seo";
-import { faqJsonLd } from "@/data/faq";
+import { homeJsonLd, solverJsonLd } from "@/data/structured-data";
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -21,7 +21,7 @@ export const routes: RouteRecordRaw[] = [
         keywords:
           "blossom word game,spelling bee,blossom word,word game,puzzle game,daily word puzzle,word hunt",
         path: "/",
-        jsonLd: faqJsonLd(),
+        jsonLd: homeJsonLd(),
       } satisfies RouteSeo,
     },
   },
@@ -37,6 +37,7 @@ export const routes: RouteRecordRaw[] = [
         keywords:
           "blossom solver,spelling bee solver,word finder,blossom word game,word game solver,puzzle solver",
         path: "/solver",
+        jsonLd: solverJsonLd(),
       } satisfies RouteSeo,
     },
   },

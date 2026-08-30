@@ -65,18 +65,3 @@ export const faqs: FaqItem[] = [
       "A new puzzle becomes available at midnight US Eastern Time (America/New_York). That is when the calendar day changes in the game's reference timezone, so everyone sees the same daily hive once that date begins in Eastern Time.",
   },
 ];
-
-export function faqJsonLd(): object {
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map((item) => ({
-      "@type": "Question",
-      name: item.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.answer,
-      },
-    })),
-  };
-}

@@ -33,36 +33,16 @@
     <meta name="theme-color" content="#fce303" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#1c1b22" media="(prefers-color-scheme: dark)" />
 
-    <!-- Site-wide structured data -->
+    <!-- Site-wide structured data (page-specific JSON-LD is injected per route) -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "WebSite",
-            "@id": "https://blossomword.com/#website",
-            "url": "https://blossomword.com/",
-            "name": "Blossom Word Game",
-            "description": "Free daily word hunt puzzle. Reach Genius and bloom every flower in the daily challenge.",
-            "inLanguage": "en"
-          },
-          {
-            "@type": "WebApplication",
-            "@id": "https://blossomword.com/#app",
-            "name": "Blossom Word Game",
-            "url": "https://blossomword.com/",
-            "applicationCategory": "GameApplication",
-            "operatingSystem": "Any",
-            "browserRequirements": "Requires JavaScript",
-            "description": "Play Blossom Word Game free online. Daily word hunt — reach Genius and bloom every flower in the daily challenge.",
-            "image": "https://blossomword.com/og.png",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "USD"
-            }
-          }
-        ]
+        "@type": "WebSite",
+        "@id": "https://blossomword.com/#website",
+        "url": "https://blossomword.com/",
+        "name": "Blossom Word Game",
+        "description": "Free daily word hunt puzzle. Reach Genius and bloom every flower in the daily challenge.",
+        "inLanguage": "en"
       }
     </script>
 
