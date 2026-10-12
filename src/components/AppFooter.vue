@@ -21,6 +21,17 @@ const GITHUB_URL = "https://github.com/slysweb/blossom-word-game";
         <RouterLink to="/terms">{{ $t("Terms") }}</RouterLink>
       </nav>
 
+      <a
+        class="footer__badge"
+        href="https://dle.games/play/blossom-word-game/vote"
+        target="_blank"
+        rel="nofollow noopener noreferrer">
+        <img
+          src="https://dle.games/badges/vote-on-dle-games-dark.svg"
+          alt="Vote on DLE.GAMES"
+          height="40" />
+      </a>
+
       <p class="footer__copy">
         &copy; {{ year }} Blossom Word Game. A free daily word puzzle.
       </p>
@@ -66,6 +77,11 @@ const GITHUB_URL = "https://github.com/slysweb/blossom-word-game";
       color: var(--primary);
     }
   }
+}
+
+.footer__badge {
+  display: inline-flex;
+  line-height: 0;
 }
 
 .footer__copy {
