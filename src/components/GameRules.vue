@@ -79,6 +79,11 @@
         matching words.
       </li>
       <li>Bloom every flower to complete the challenge.</li>
+      <li>
+        Complete the challenge and that day's card in the
+        <RouterLink to="/archive">Puzzle Archive</RouterLink> shows a
+        <strong>seven-color flower</strong>.
+      </li>
     </ul>
 
     <h3>Ranking rules</h3>

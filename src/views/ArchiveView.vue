@@ -12,6 +12,7 @@ import {
 } from "date-fns";
 import { useGameStore } from "@/stores/game";
 import { EPOCH, dateKey, getPuzzleForDate, getToday } from "@/utils/puzzle";
+import { PETAL_PALETTE, buildChallengeState } from "@/utils/dailyChallenge";
 
 const game = useGameStore();
 const ready = ref(false);
@@ -33,7 +34,10 @@ interface DayEntry {
   found: number;
   total: number;
   solved: boolean;
+  challengeComplete: boolean;
 }
+
+const bloomPetalAngles = PETAL_PALETTE.map((_, i) => (360 / PETAL_PALETTE.length) * i);
 
 const days = computed<DayEntry[]>(() => {
   if (!game.puzzles.length) return [];
@@ -49,7 +53,8 @@ const days = computed<DayEntry[]>(() => {
     .map((date) => {
       const puzzle = getPuzzleForDate(game.puzzles, date);
       const key = dateKey(date);
-      const found = game.progress[key]?.length ?? 0;
+      const guesses = game.progress[key] ?? [];
+      const found = guesses.length;
       return {
         key,
         label: format(date, "MMM d"),
@@ -59,6 +64,8 @@ const days = computed<DayEntry[]>(() => {
         found,
         total: puzzle.answers.length,
         solved: found > 0 && found === puzzle.answers.length,
+        challengeComplete:
+          found > 0 && buildChallengeState(guesses, puzzle.answers).complete,
       };
     });
 });
@@ -117,6 +124,24 @@ onMounted(async () => {
             <span v-else-if="day.found > 0">{{ day.found }} / {{ day.total }} words</span>
             <span v-else class="muted">{{ day.total }} words</span>
           </div>
+          <svg
+            v-if="day.challengeComplete"
+            class="day-card__bloom"
+            viewBox="0 0 32 32"
+            role="img"
+            aria-label="Today's Challenge complete">
+            <title>Today's Challenge complete</title>
+            <ellipse
+              v-for="(angle, i) in bloomPetalAngles"
+              :key="i"
+              cx="16"
+              cy="8"
+              rx="4"
+              ry="6"
+              :fill="PETAL_PALETTE[i]"
+              :transform="`rotate(${angle} 16 16)`" />
+            <circle cx="16" cy="16" r="3.5" fill="#fff3a8" stroke="#b8860b" stroke-width="1.2" />
+          </svg>
         </RouterLink>
       </li>
     </ul>
@@ -185,6 +210,7 @@ onMounted(async () => {
 }
 
 .day-card {
+  position: relative;
   display: block;
   padding: 0.9rem 1rem;
   text-decoration: none;
@@ -249,5 +275,14 @@ onMounted(async () => {
     color: var(--text-muted);
     font-weight: 600;
   }
+}
+
+.day-card__bloom {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.55rem;
+  width: 30px;
+  height: 30px;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.15));
 }
 </style>
