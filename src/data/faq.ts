@@ -10,6 +10,11 @@ export const faqs: FaqItem[] = [
       "Blossom Word Game is a free daily word hunt puzzle, similar to Spelling Bee. You are given a hive of seven letters and must create as many valid words as you can using those letters.",
   },
   {
+    question: "What is Today's Challenge?",
+    answer:
+      "Today's Challenge is the garden of flowers beside the hive. Each flower blooms when you find a word of a certain length: up to five 4-letter words, four 5-letter words, three 6-letter words, two 7-letter words, and a pangram for the special seven-petal rainbow flower. Each row only shows as many flowers as the puzzle has answers at that length. The challenge is there to make the game more fun and give you a real sense of achievement. Completing it does not mean you have found every word — you can keep playing to hunt down the rest, or call it a day with a clear conscience.",
+  },
+  {
     question: "How do I play?",
     answer:
       "Build words that are at least four letters long and always include the center letter. Letters can be reused as many times as you like. Type with your keyboard or tap the letters in the hive, then press Enter to submit.",
