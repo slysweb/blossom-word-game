@@ -26,6 +26,34 @@ export const routes: RouteRecordRaw[] = [
     },
   },
   {
+    path: "/unlimited",
+    name: "unlimited",
+    component: GameView,
+    meta: {
+      seo: {
+        title: "Unlimited Mode - Blossom Word Game",
+        description:
+          "Play as many Blossom Word Game hives as you like. Each puzzle is drawn from the game pool, and your games stay in a list you can return to.",
+        keywords:
+          "blossom word game unlimited,spelling bee unlimited,word puzzle,hive game,word hunt",
+        path: "/unlimited",
+      } satisfies RouteSeo,
+    },
+  },
+  {
+    path: "/unlimited/:id",
+    name: "unlimited-game",
+    component: GameView,
+    meta: {
+      seo: {
+        title: "Unlimited Mode - Blossom Word Game",
+        description:
+          "Play a shared Blossom Word Game hive. Find the words, track your score, and send the link to a friend to play the same puzzle.",
+        path: "/unlimited",
+      } satisfies RouteSeo,
+    },
+  },
+  {
     path: "/solver",
     name: "solver",
     component: SolverView,

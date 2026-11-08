@@ -2,7 +2,9 @@
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStorage } from "@vueuse/core";
+import { useI18n } from "vue-i18n";
 import { useGameStore } from "@/stores/game";
+import { useToast } from "@/composables/useToast";
 import { getToday, isPlayableDate, parseDateKey } from "@/utils/puzzle";
 import HiveGrid from "@/components/HiveGrid.vue";
 import ProgressBar from "@/components/ProgressBar.vue";
@@ -16,10 +18,14 @@ import BaseModal from "@/components/BaseModal.vue";
 import ShareButton from "@/components/ShareButton.vue";
 import DailyChallenge from "@/components/DailyChallenge.vue";
 import HintButtons from "@/components/HintButtons.vue";
+import GameListModal from "@/components/GameListModal.vue";
+import UnlimitedGuide from "@/components/UnlimitedGuide.vue";
 
 const route = useRoute();
 const router = useRouter();
 const game = useGameStore();
+const toast = useToast();
+const { t } = useI18n();
 
 const ready = ref(false);
 const error = ref(false);
@@ -28,6 +34,7 @@ const showWon = ref(false);
 const wonDismissed = ref(false);
 const showAnswers = ref(false);
 const showChallengeWon = ref(false);
+const showGameList = ref(false);
 
 /** Dates when the challenge celebration modal was already shown. */
 const challengeCelebrated = useStorage<Record<string, boolean>>(
@@ -35,12 +42,13 @@ const challengeCelebrated = useStorage<Record<string, boolean>>(
   {},
 );
 
-const isArchive = computed(
-  () => typeof route.params.date === "string" && route.params.date.length > 0,
+const isArchive = computed(() => route.name === "play");
+const isUnlimited = computed(
+  () => route.name === "unlimited" || route.name === "unlimited-game",
 );
 
 async function load(): Promise<void> {
-  ready.value = false;
+  if (!game.isLoaded) ready.value = false;
   error.value = false;
   showAnswers.value = false;
   showWon.value = false;
@@ -48,6 +56,23 @@ async function load(): Promise<void> {
   showChallengeWon.value = false;
 
   try {
+    if (isUnlimited.value) {
+      const requested = typeof route.params.id === "string" ? route.params.id : "";
+      const opened = await game.openUnlimited(requested || null);
+      if (opened.unknown) toast.show(t("unlimited.unknown"));
+      if (!opened.id) {
+        error.value = true;
+        ready.value = false;
+        return;
+      }
+      ready.value = true;
+      if (requested.toLowerCase() !== opened.id) {
+        await router.replace(`/unlimited/${opened.id}`);
+      }
+      return;
+    }
+
+    showGameList.value = false;
     let date = getToday();
     if (isArchive.value) {
       const parsed = parseDateKey(route.params.date as string);
@@ -61,17 +86,46 @@ async function load(): Promise<void> {
     ready.value = true;
   } catch {
     error.value = true;
+    ready.value = false;
   }
 }
 
+async function startNewGame(): Promise<void> {
+  const id = game.createUnlimitedGame();
+  if (!id) {
+    toast.show(t("unlimited.exhausted"));
+    return;
+  }
+  showGameList.value = false;
+  if (route.params.id !== id) await router.push(`/unlimited/${id}`);
+}
+
+async function openListedGame(id: string): Promise<void> {
+  if (route.params.id !== id) await router.push(`/unlimited/${id}`);
+}
+
+async function removeListedGame(id: string): Promise<void> {
+  const { removedActive, nextId } = game.removeUnlimitedGame(id);
+  if (!removedActive) return;
+  if (nextId) {
+    await router.replace(`/unlimited/${nextId}`);
+    return;
+  }
+  await startNewGame();
+}
+
 onMounted(load);
-watch(() => route.params.date, load);
+watch(
+  () =>
+    `${String(route.name)}:${String(route.params.date ?? "")}:${String(route.params.id ?? "")}`,
+  load,
+);
 
 watch(
   () => game.isComplete,
   (complete) => {
-    // Only celebrate automatically for today's puzzle.
-    if (complete && game.isToday && !wonDismissed.value) {
+    // Celebrate on today's daily puzzle and on unlimited games.
+    if (complete && (game.isToday || game.isUnlimited) && !wonDismissed.value) {
       showWon.value = true;
     }
   },
@@ -81,12 +135,12 @@ let challengeFireworksTimer: ReturnType<typeof setTimeout> | null = null;
 
 function maybeCelebrateChallenge(): void {
   if (!game.dailyChallenge?.complete) return;
-  if (challengeCelebrated.value[game.gameDateString]) return;
+  if (!game.progressKey || challengeCelebrated.value[game.progressKey]) return;
 
   showChallengeWon.value = true;
   challengeCelebrated.value = {
     ...challengeCelebrated.value,
-    [game.gameDateString]: true,
+    [game.progressKey]: true,
   };
 
   if (challengeFireworksTimer) clearTimeout(challengeFireworksTimer);
@@ -111,7 +165,7 @@ watch(ready, (isReady) => {
 
 <template>
   <div class="layout">
-    <HeroSection v-if="!isArchive" />
+    <HeroSection v-if="!isArchive && !isUnlimited" />
 
     <div v-if="isArchive" class="archive-bar">
       <RouterLink to="/archive" class="pill-link">← Archive</RouterLink>
@@ -120,9 +174,18 @@ watch(ready, (isReady) => {
 
     <div class="game-heading">
       <h2>
-        {{ isArchive ? `Puzzle for ${game.gameDateString}` : "Blossom Word Game of Today" }}
+        {{
+          isUnlimited
+            ? $t("Unlimited")
+            : isArchive
+              ? `Puzzle for ${game.gameDateString}`
+              : "Blossom Word Game of Today"
+        }}
       </h2>
-      <p v-if="!isArchive" class="game-heading__subtitle">
+      <p v-if="isUnlimited" class="game-heading__subtitle">
+        {{ $t("unlimited.subtitle") }}
+      </p>
+      <p v-else-if="!isArchive" class="game-heading__subtitle">
         Hunt words, blossom flowers.
       </p>
     </div>
@@ -140,9 +203,25 @@ watch(ready, (isReady) => {
 
           <template v-else>
             <div class="game-card__top">
-              <span class="game-card__meta">#{{ game.puzzleNo }} · {{ game.gameDateString }}</span>
+              <button
+                v-if="isUnlimited"
+                type="button"
+                class="yesterday-link game-card__action--start"
+                @click="showGameList = true">
+                {{ $t("Games") }}
+              </button>
+              <span v-else class="game-card__meta">
+                #{{ game.puzzleNo }} · {{ game.gameDateString }}
+              </span>
               <HintButtons />
-              <span class="yesterday-link" @click="showYesterday = true">
+              <button
+                v-if="isUnlimited"
+                type="button"
+                class="yesterday-link"
+                @click="startNewGame">
+                + {{ $t("New game") }}
+              </button>
+              <span v-else class="yesterday-link" @click="showYesterday = true">
                 👁 {{ $t("Yesterday") }} {{ $t("Answer") }}
               </span>
             </div>
@@ -164,7 +243,7 @@ watch(ready, (isReady) => {
 
       <div v-if="ready && !error" class="game-found">
         <CorrectGuesses />
-        <div v-if="game.userScore > 0" class="game-found__share">
+        <div class="game-found__share">
           <ShareButton />
         </div>
         <div v-if="isArchive" class="game-found__reveal">
@@ -181,11 +260,19 @@ watch(ready, (isReady) => {
       </div>
     </div>
 
-    <template v-if="!isArchive">
+    <UnlimitedGuide v-if="isUnlimited" />
+
+    <template v-if="!isArchive && !isUnlimited">
       <GameRules />
       <FaqSection />
     </template>
   </div>
+
+  <GameListModal
+    v-model="showGameList"
+    @select="openListedGame"
+    @remove="removeListedGame"
+    @new-game="startNewGame" />
 
   <BaseModal v-model="showYesterday" :title="$t('Yesterdays Answers')">
     <YesterdaysAnswers />
@@ -325,6 +412,7 @@ watch(ready, (isReady) => {
   font-weight: 700;
   font-size: 0.85rem;
   color: var(--text-muted);
+  background: transparent;
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 0.25rem 0.75rem;
@@ -335,6 +423,11 @@ watch(ready, (isReady) => {
     border-color: var(--primary);
     background: var(--primary-soft);
   }
+}
+
+.game-card__action--start {
+  grid-area: meta;
+  justify-self: start;
 }
 
 .game-result {

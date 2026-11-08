@@ -4,21 +4,21 @@ import { useStorage } from "@vueuse/core";
 import { subDays } from "date-fns";
 import { i18n } from "@/i18n";
 import { useToast } from "@/composables/useToast";
-import { incrementDups } from "@/utils/array";
 import {
   calculatePoints,
   dateKey,
   getPuzzleForDate,
   getToday,
   getTodayKey,
+  hiveId,
+  isHiveId,
   isPangram,
   loadPuzzles,
   puzzleNumber,
 } from "@/utils/puzzle";
+import { maxScoreFor, rankIndexFor, scoreFor, scoreLevelsFor } from "@/utils/score";
 import { SITE_URL } from "@/utils/seo";
-import {
-  buildChallengeState,
-} from "@/utils/dailyChallenge";
+import { buildChallengeState } from "@/utils/dailyChallenge";
 import type { Puzzle } from "@/types/puzzle";
 
 const PROGRESS_PERCENTAGES = [0, 20, 40, 50, 60, 70, 80, 90, 100];
@@ -30,8 +30,23 @@ const POINTS_MESSAGES: Record<number, string> = {
   8: "amazing",
 };
 
-/** Found words per puzzle date, e.g. { "2026-06-14": ["mint", "saint"] }. */
+/** Found words per puzzle key (a date, or an unlimited hive id). */
 type Progress = Record<string, string[]>;
+
+export interface UnlimitedGameSummary {
+  id: string;
+  center: string;
+  outer: string;
+  score: number;
+  maxScore: number;
+  rankIndex: number;
+}
+
+export interface OpenUnlimitedResult {
+  id: string;
+  /** The requested id was not a hive in the puzzle pool. */
+  unknown: boolean;
+}
 
 export const useGameStore = defineStore("game", () => {
   const { t } = i18n.global;
@@ -39,17 +54,44 @@ export const useGameStore = defineStore("game", () => {
 
   const puzzles = ref<Puzzle[]>([]);
   const isLoaded = ref(false);
+  const mode = ref<"daily" | "unlimited">("daily");
   // The date currently being played (defaults to today; changed for archive).
   const activeDate = ref<Date>(getToday());
+  const activeUnlimitedId = ref<string | null>(null);
   // Per-date progress survives reloads and lets users resume any puzzle.
   const progress = useStorage<Progress>("progress", {});
+  /** Hive ids in the unlimited game list, newest first. */
+  const unlimitedOrder = useStorage<string[]>("unlimitedGames", []);
+  const unlimitedProgress = useStorage<Progress>("unlimitedProgress", {});
+  const unlimitedHints = useStorage<Record<string, number>>("unlimitedHints", {});
+  const lastUnlimitedId = useStorage("unlimitedLastId", "");
 
-  const activeKey = computed(() => dateKey(activeDate.value));
-  const isToday = computed(() => activeKey.value === getTodayKey());
+  const isUnlimited = computed(() => mode.value === "unlimited");
+  const gameDateString = computed(() => dateKey(activeDate.value));
+  const isToday = computed(() => gameDateString.value === getTodayKey());
 
-  const puzzle = computed<Puzzle | null>(() =>
-    puzzles.value.length ? getPuzzleForDate(puzzles.value, activeDate.value) : null,
+  const puzzlesById = computed(() => {
+    const map = new Map<string, Puzzle>();
+    for (const puzzle of puzzles.value) {
+      const id = hiveId(puzzle);
+      if (!map.has(id)) map.set(id, puzzle);
+    }
+    return map;
+  });
+
+  /** Key used to store guesses, hints, and the flower-challenge celebration. */
+  const progressKey = computed(() =>
+    isUnlimited.value ? (activeUnlimitedId.value ?? "") : gameDateString.value,
   );
+
+  const puzzle = computed<Puzzle | null>(() => {
+    if (!puzzles.value.length) return null;
+    if (isUnlimited.value) {
+      const id = activeUnlimitedId.value;
+      return id ? (puzzlesById.value.get(id) ?? null) : null;
+    }
+    return getPuzzleForDate(puzzles.value, activeDate.value);
+  });
   const previousPuzzle = computed<Puzzle | null>(() =>
     puzzles.value.length
       ? getPuzzleForDate(puzzles.value, subDays(activeDate.value, 1))
@@ -68,38 +110,16 @@ export const useGameStore = defineStore("game", () => {
     () => previousPuzzle.value?.middleLetter ?? "",
   );
 
-  const correctGuessesList = computed(() => progress.value[activeKey.value] ?? []);
-  const gameDateString = computed(() => activeKey.value);
-
-  const maxScore = computed(() =>
-    answers.value.reduce((acc, word) => acc + calculatePoints(word), 0),
-  );
-  const userScore = computed(() =>
-    correctGuessesList.value.reduce(
-      (acc, word) => acc + calculatePoints(word),
-      0,
-    ),
-  );
-
-  const scoreLevels = computed(() => {
-    const levels = [
-      0,
-      5,
-      Math.floor(maxScore.value * 0.1),
-      Math.floor(maxScore.value * 0.2),
-      Math.floor(maxScore.value * 0.3),
-      Math.floor(maxScore.value * 0.4),
-      Math.floor(maxScore.value * 0.5),
-      Math.floor(maxScore.value * 0.55),
-      Math.floor(maxScore.value * 0.6),
-    ].sort((a, b) => a - b);
-    const unique = incrementDups(levels);
-    const min = Math.min(...unique);
-    return unique.map((level) => level - min);
+  const correctGuessesList = computed(() => {
+    const bag = isUnlimited.value ? unlimitedProgress.value : progress.value;
+    return bag[progressKey.value] ?? [];
   });
 
-  const progressIndex = computed(
-    () => scoreLevels.value.filter((v) => v <= userScore.value).length - 1,
+  const maxScore = computed(() => maxScoreFor(answers.value));
+  const userScore = computed(() => scoreFor(correctGuessesList.value));
+  const scoreLevels = computed(() => scoreLevelsFor(maxScore.value));
+  const progressIndex = computed(() =>
+    rankIndexFor(userScore.value, scoreLevels.value),
   );
   const progressPercentage = computed(
     () => PROGRESS_PERCENTAGES[progressIndex.value] ?? 0,
@@ -112,15 +132,37 @@ export const useGameStore = defineStore("game", () => {
     () => correctGuessesList.value.filter((w) => isPangram(w)).length,
   );
 
-  /** Per-date hint usage (0–3). Resets implicitly when the date key is absent. */
+  /** Saved unlimited games, in list order, with score and rank. */
+  const unlimitedGames = computed<UnlimitedGameSummary[]>(() =>
+    unlimitedOrder.value.flatMap((id) => {
+      const entry = puzzlesById.value.get(id);
+      if (!entry) return [];
+      const found = unlimitedProgress.value[id] ?? [];
+      const max = maxScoreFor(entry.answers);
+      const score = scoreFor(found);
+      return [
+        {
+          id,
+          center: id.slice(0, 1),
+          outer: id.slice(1),
+          score,
+          maxScore: max,
+          rankIndex: rankIndexFor(score, scoreLevelsFor(max)),
+        },
+      ];
+    }),
+  );
+
+  /** Per-date hint usage (0–3). Resets implicitly when the key is absent. */
   const hintsUsed = useStorage<Record<string, number>>("hintsUsed", {});
 
   /** Letters to pre-fill the guess input after using a hint. */
   const hintDraft = ref("");
 
-  const hintsUsedForActiveDate = computed(
-    () => hintsUsed.value[activeKey.value] ?? 0,
-  );
+  const hintsUsedForActiveDate = computed(() => {
+    const bag = isUnlimited.value ? unlimitedHints.value : hintsUsed.value;
+    return bag[progressKey.value] ?? 0;
+  });
   const hintsRemaining = computed(() =>
     Math.max(0, 3 - hintsUsedForActiveDate.value),
   );
@@ -129,6 +171,16 @@ export const useGameStore = defineStore("game", () => {
   const dailyChallenge = computed(() =>
     buildChallengeState(correctGuessesList.value, answers.value),
   );
+
+  function saveFound(words: string[]): void {
+    const key = progressKey.value;
+    if (!key) return;
+    if (isUnlimited.value) {
+      unlimitedProgress.value = { ...unlimitedProgress.value, [key]: words };
+      return;
+    }
+    progress.value = { ...progress.value, [key]: words };
+  }
 
   /** Pick an unfound answer and reveal its first three letters. Returns status. */
   function useHint(): "ok" | "empty" | "exhausted" {
@@ -143,10 +195,13 @@ export const useGameStore = defineStore("game", () => {
     const word = unfound[Math.floor(Math.random() * unfound.length)]!;
     hintDraft.value = word.slice(0, 3);
 
-    hintsUsed.value = {
-      ...hintsUsed.value,
-      [activeKey.value]: used + 1,
-    };
+    const key = progressKey.value;
+    const next = used + 1;
+    if (isUnlimited.value) {
+      unlimitedHints.value = { ...unlimitedHints.value, [key]: next };
+    } else {
+      hintsUsed.value = { ...hintsUsed.value, [key]: next };
+    }
     return "ok";
   }
 
@@ -154,10 +209,20 @@ export const useGameStore = defineStore("game", () => {
     hintDraft.value = "";
   }
 
-  /** Share link for the active puzzle. */
-  const shareUrl = computed(() =>
-    isToday.value ? SITE_URL : `${SITE_URL}/play/${activeKey.value}`,
+  /** Label drawn on the share card. */
+  const shareLabel = computed(() =>
+    isUnlimited.value && activeUnlimitedId.value
+      ? activeUnlimitedId.value.toUpperCase()
+      : `#${puzzleNo.value} · ${gameDateString.value}`,
   );
+
+  /** Share link for the active puzzle. */
+  const shareUrl = computed(() => {
+    if (isUnlimited.value && activeUnlimitedId.value) {
+      return `${SITE_URL}/unlimited/${activeUnlimitedId.value}`;
+    }
+    return isToday.value ? SITE_URL : `${SITE_URL}/play/${gameDateString.value}`;
+  });
 
   /** Outer hive letters in stable order for share images. */
   const sortedOuterLetters = computed(() =>
@@ -166,6 +231,13 @@ export const useGameStore = defineStore("game", () => {
       .filter((l) => l !== middleLetter.value)
       .sort(),
   );
+
+  function shareTitle(): string {
+    if (isUnlimited.value && activeUnlimitedId.value) {
+      return `🌸 Blossom Word Game ${activeUnlimitedId.value.toUpperCase()}`;
+    }
+    return `🌸 Blossom Word Game #${puzzleNo.value}`;
+  }
 
   /** A no-spoiler, Wordle-style result string for sharing. */
   const shareText = computed(() => {
@@ -179,22 +251,25 @@ export const useGameStore = defineStore("game", () => {
         ? ` · ${pangramCount.value} ${t("pangrams", pangramCount.value)}`
         : "";
     return [
-      `🌸 Blossom Word Game #${puzzleNo.value}`,
+      shareTitle(),
       `${bar} ${rankLabel.value}`,
       `${words}${pangrams} · ${userScore.value} ${t("pts")}`,
       shareUrl.value,
     ].join("\n");
   });
 
-  /** Share text when today's flower challenge is complete. */
+  /** Share text when the flower challenge is complete. */
   const challengeShareText = computed(() => {
     const ch = dailyChallenge.value;
     const base = shareText.value;
     if (!ch?.complete) return base;
     const blooms = "🌸".repeat(ch.totalCount);
+    const lineKey = isUnlimited.value
+      ? "challenge.shareLineUnlimited"
+      : "challenge.shareLine";
     return [
-      `🌸 Blossom Word Game #${puzzleNo.value}`,
-      `${t("challenge.shareLine", { total: ch.totalCount })} ${blooms}`,
+      shareTitle(),
+      `${t(lineKey, { total: ch.totalCount })} ${blooms}`,
       ...base.split("\n").slice(1),
     ].join("\n");
   });
@@ -216,11 +291,7 @@ export const useGameStore = defineStore("game", () => {
     const found = correctGuessesList.value;
     if (found.includes(word)) return toast.show(t("already found"));
 
-    // Reassign for reactivity + persistence.
-    progress.value = {
-      ...progress.value,
-      [activeKey.value]: [...found, word],
-    };
+    saveFound([...found, word]);
 
     const points = calculatePoints(word);
     if (isPangram(word)) {
@@ -267,10 +338,106 @@ export const useGameStore = defineStore("game", () => {
     isLoaded.value = true;
   }
 
+  function todayHiveId(): string | null {
+    if (!puzzles.value.length) return null;
+    return hiveId(getPuzzleForDate(puzzles.value, getToday()));
+  }
+
+  function pruneUnlimited(): void {
+    const map = puzzlesById.value;
+    const next = unlimitedOrder.value.filter((id) => map.has(id));
+    if (next.length !== unlimitedOrder.value.length) {
+      unlimitedOrder.value = next;
+    }
+  }
+
+  /**
+   * Add a random hive from the pool that is not already in the list.
+   * Today's daily hive is skipped so unlimited play does not spoil it.
+   * Returns the new id, or null when the pool is exhausted.
+   */
+  function createUnlimitedGame(): string | null {
+    const used = new Set(unlimitedOrder.value);
+    const today = todayHiveId();
+    const pool = [...puzzlesById.value.keys()];
+    let candidates = pool.filter((id) => !used.has(id) && id !== today);
+    if (candidates.length === 0) {
+      candidates = pool.filter((id) => !used.has(id));
+    }
+    if (candidates.length === 0) return null;
+
+    const id = candidates[Math.floor(Math.random() * candidates.length)]!;
+    unlimitedOrder.value = [id, ...unlimitedOrder.value];
+    activeUnlimitedId.value = id;
+    lastUnlimitedId.value = id;
+    hintDraft.value = "";
+    return id;
+  }
+
+  /** Switch to unlimited and resolve which hive to show. */
+  async function openUnlimited(requested: string | null): Promise<OpenUnlimitedResult> {
+    await ensureLoaded();
+    mode.value = "unlimited";
+    hintDraft.value = "";
+    pruneUnlimited();
+
+    const normalized = requested?.toLowerCase() ?? "";
+    const known = isHiveId(normalized) && puzzlesById.value.has(normalized);
+    if (known) {
+      if (!unlimitedOrder.value.includes(normalized)) {
+        unlimitedOrder.value = [normalized, ...unlimitedOrder.value];
+      }
+      activeUnlimitedId.value = normalized;
+      lastUnlimitedId.value = normalized;
+      return { id: normalized, unknown: false };
+    }
+
+    const remembered =
+      lastUnlimitedId.value && unlimitedOrder.value.includes(lastUnlimitedId.value)
+        ? lastUnlimitedId.value
+        : (unlimitedOrder.value[0] ?? null);
+    const id = remembered ?? createUnlimitedGame();
+    if (!id) {
+      activeUnlimitedId.value = null;
+      return { id: "", unknown: normalized.length > 0 };
+    }
+    activeUnlimitedId.value = id;
+    lastUnlimitedId.value = id;
+    return { id, unknown: normalized.length > 0 };
+  }
+
+  /**
+   * Remove a hive from the list, including its guesses and hints.
+   * When the open game is removed, `nextId` is what should be shown next.
+   */
+  function removeUnlimitedGame(id: string): { removedActive: boolean; nextId: string | null } {
+    const wasActive = activeUnlimitedId.value === id;
+    unlimitedOrder.value = unlimitedOrder.value.filter((item) => item !== id);
+
+    const progressNext = { ...unlimitedProgress.value };
+    delete progressNext[id];
+    unlimitedProgress.value = progressNext;
+
+    const hintsNext = { ...unlimitedHints.value };
+    delete hintsNext[id];
+    unlimitedHints.value = hintsNext;
+
+    const nextId = unlimitedOrder.value[0] ?? null;
+    if (wasActive) {
+      activeUnlimitedId.value = nextId;
+      lastUnlimitedId.value = nextId ?? "";
+    } else if (lastUnlimitedId.value === id) {
+      lastUnlimitedId.value = activeUnlimitedId.value ?? nextId ?? "";
+    }
+    return { removedActive: wasActive, nextId };
+  }
+
   /** Load puzzles (if needed) and switch to the given date. */
   async function openDate(date: Date): Promise<void> {
     await ensureLoaded();
+    mode.value = "daily";
     activeDate.value = date;
+    hintDraft.value = "";
   }
 
   return {
@@ -279,6 +446,9 @@ export const useGameStore = defineStore("game", () => {
     isLoaded,
     activeDate,
     isToday,
+    isUnlimited,
+    activeUnlimitedId,
+    unlimitedGames,
     answers,
     availableLetters,
     middleLetter,
@@ -287,6 +457,7 @@ export const useGameStore = defineStore("game", () => {
     yesterdayMiddleLetter,
     correctGuessesList,
     gameDateString,
+    progressKey,
     maxScore,
     userScore,
     scoreLevels,
@@ -302,6 +473,7 @@ export const useGameStore = defineStore("game", () => {
     dailyChallenge,
     shareText,
     shareUrl,
+    shareLabel,
     sortedOuterLetters,
     challengeShareText,
     useHint,
@@ -309,5 +481,8 @@ export const useGameStore = defineStore("game", () => {
     submitGuess,
     ensureLoaded,
     openDate,
+    openUnlimited,
+    createUnlimitedGame,
+    removeUnlimitedGame,
   };
 });

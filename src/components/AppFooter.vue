@@ -13,6 +13,7 @@ const GITHUB_URL = "https://github.com/slysweb/blossom-word-game";
 
       <nav class="footer__links" aria-label="Footer">
         <RouterLink to="/">{{ $t("Game") }}</RouterLink>
+        <RouterLink to="/unlimited">{{ $t("Unlimited") }}</RouterLink>
         <RouterLink to="/archive">{{ $t("Archive") }}</RouterLink>
         <RouterLink to="/solver">{{ $t("Blossom Solver") }}</RouterLink>
         <RouterLink to="/about">{{ $t("About") }}</RouterLink>

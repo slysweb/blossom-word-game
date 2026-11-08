@@ -1,6 +1,11 @@
 {
   "Game": "Game",
+  "Unlimited": "Unlimited",
   "Archive": "Archive",
+  "Games": "Games",
+  "Game List": "Game List",
+  "New game": "New game",
+  "Remove game": "Remove game",
   "Blossom Solver": "Blossom Solver",
   "About": "About",
   "Privacy": "Privacy",
@@ -34,6 +39,7 @@
     "postTo": "Post to",
     "copyImage": "Copy image",
     "copyLink": "Copy link",
+    "beatScore": "Can you beat my score?",
     "more": "More",
     "generating": "Generating your card…",
     "cardAlt": "Blossom Word Game result card",
@@ -87,6 +93,14 @@
     "wonTitle": "Congratulations!",
     "wonMessage": "You completed the challenge and bloomed every flower!",
     "continuePlay": "Keep playing",
-    "shareLine": "Today's Challenge complete! {total}/{total} flowers bloomed"
+    "titleUnlimited": "Flower Challenge",
+    "descUnlimited": "Find 4- through 7-letter words to bloom each row, then bloom the seven-color flower with a pangram.",
+    "shareLine": "Today's Challenge complete! {total}/{total} flowers bloomed",
+    "shareLineUnlimited": "Flower challenge complete! {total}/{total} flowers bloomed"
+  },
+  "unlimited": {
+    "subtitle": "Open as many hives as you like from the puzzle pool. Each game stays in your list.",
+    "unknown": "That hive isn't in the puzzle pool.",
+    "exhausted": "Every puzzle in the pool is already in your list."
   }
 }

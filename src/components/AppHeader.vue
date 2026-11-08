@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { useRoute } from "vue-router";
 import { useThemeStore } from "@/stores/theme";
 
 const theme = useThemeStore();
+const route = useRoute();
 </script>
 
 <template>
@@ -18,6 +20,11 @@ const theme = useThemeStore();
       </RouterLink>
       <nav class="nav">
         <RouterLink to="/">{{ $t("Game") }}</RouterLink>
+        <RouterLink
+          to="/unlimited"
+          :class="{ 'router-link-exact-active': route.path.startsWith('/unlimited') }">
+          {{ $t("Unlimited") }}
+        </RouterLink>
         <RouterLink to="/archive">{{ $t("Archive") }}</RouterLink>
         <RouterLink to="/solver">{{ $t("Blossom Solver") }}</RouterLink>
         <button
@@ -73,7 +80,9 @@ const theme = useThemeStore();
 
 .nav {
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 0.75rem;
   align-items: center;
 }
 

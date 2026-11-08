@@ -5,6 +5,8 @@ import { PETAL_PALETTE } from "@/utils/dailyChallenge";
 export interface ShareCardInput {
   puzzleNo: number;
   dateString: string;
+  /** Overrides the default "#n · date" label. Used for unlimited hives. */
+  metaLabel?: string;
   middleLetter: string;
   outerLetters: string[];
   challenge: DailyChallengeState;
@@ -399,7 +401,7 @@ export async function renderShareCard(input: ShareCardInput): Promise<Blob> {
 
   const labelBottom = drawMetaLabel(
     ctx,
-    `#${input.puzzleNo} · ${input.dateString}`,
+    input.metaLabel ?? `#${input.puzzleNo} · ${input.dateString}`,
     cardX + cardW / 2,
     cardY + 18,
   );

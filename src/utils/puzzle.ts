@@ -148,6 +148,26 @@ export function isPlayableDate(date: Date): boolean {
   return isPlayableKey(dateKey(date));
 }
 
+/**
+ * Stable id for a hive: center letter, then the other six in alphabetical order.
+ * `cadinor` means center C and outer letters A D I N O R.
+ */
+export function hiveId(puzzle: Pick<Puzzle, "middleLetter" | "availableLetters">): string {
+  const center = puzzle.middleLetter.toLowerCase();
+  const outer = puzzle.availableLetters
+    .toLowerCase()
+    .split("")
+    .filter((letter) => letter !== center)
+    .sort()
+    .join("");
+  return center + outer;
+}
+
+/** True when a string is seven distinct letters. */
+export function isHiveId(id: string): boolean {
+  return /^[a-z]{7}$/.test(id) && new Set(id).size === 7;
+}
+
 /** A word using all 7 unique letters is a pangram. */
 export function isPangram(word: string): boolean {
   return new Set(word).size === 7;

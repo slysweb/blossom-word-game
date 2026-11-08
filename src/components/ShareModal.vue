@@ -92,6 +92,7 @@ async function buildCard(): Promise<void> {
     const blob = await renderShareCard({
       puzzleNo: game.puzzleNo,
       dateString: game.gameDateString,
+      metaLabel: game.shareLabel,
       middleLetter: game.middleLetter,
       outerLetters: game.sortedOuterLetters,
       challenge,
@@ -131,14 +132,19 @@ watch(shareText, () => {
   if (props.modelValue) void buildCard();
 });
 
+function linkShareText(): string {
+  return `${shareText.value}\n${t("share.beatScore")}`;
+}
+
 async function copyLink(): Promise<void> {
+  const text = linkShareText();
   try {
-    await navigator.clipboard.writeText(shareText.value);
+    await navigator.clipboard.writeText(text);
     linkCopied.value = true;
     toast.show(t("Copied to clipboard"), "success");
     setTimeout(() => (linkCopied.value = false), 2000);
   } catch {
-    toast.show(shareText.value);
+    toast.show(text);
   }
 }
 
@@ -158,7 +164,11 @@ async function copyImage(): Promise<void> {
   const url = URL.createObjectURL(cardBlob.value);
   const anchor = document.createElement("a");
   anchor.href = url;
-  anchor.download = `blossom-${game.gameDateString}.png`;
+  const fileKey =
+    game.isUnlimited && game.activeUnlimitedId
+      ? game.activeUnlimitedId
+      : game.gameDateString;
+  anchor.download = `blossom-${fileKey}.png`;
   anchor.click();
   URL.revokeObjectURL(url);
   toast.show(t("share.imageDownloaded"), "success");

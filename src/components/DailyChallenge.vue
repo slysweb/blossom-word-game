@@ -15,8 +15,12 @@ function petalAngles(group: ChallengeGroup): number[] {
 
 <template>
   <aside v-if="challenge" class="daily-challenge">
-    <h3 class="daily-challenge__title">{{ $t("challenge.title") }}</h3>
-    <p class="daily-challenge__desc">{{ $t("challenge.desc") }}</p>
+    <h3 class="daily-challenge__title">
+      {{ game.isUnlimited ? $t("challenge.titleUnlimited") : $t("challenge.title") }}
+    </h3>
+    <p class="daily-challenge__desc">
+      {{ game.isUnlimited ? $t("challenge.descUnlimited") : $t("challenge.desc") }}
+    </p>
 
     <div
       v-for="group in challenge.groups"

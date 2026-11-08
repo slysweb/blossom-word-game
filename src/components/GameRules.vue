@@ -139,6 +139,15 @@ https://blossomword.com</pre>
       <li>Stuck? Open the <strong>Blossom Solver</strong> to reveal every answer.</li>
     </ul>
 
+    <h3>Unlimited mode</h3>
+    <p>
+      Today's hive is the one everyone shares. When you want another, open
+      <RouterLink to="/unlimited">Unlimited</RouterLink>. Tap
+      <strong>Games</strong> to see the hives you have started, and
+      <strong>+ New game</strong> to add one from the puzzle pool. Each game
+      keeps its own score, and the list stays in your browser.
+    </p>
+
     <h3>About the game</h3>
     <ul>
       <li>A new puzzle is released every day; everyone plays the same hive.</li>
