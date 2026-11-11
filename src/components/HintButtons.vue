@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useGameStore } from "@/stores/game";
 import { useToast } from "@/composables/useToast";
 import { useI18n } from "vue-i18n";
+import HintChartModal from "@/components/HintChartModal.vue";
 
 const game = useGameStore();
 const toast = useToast();
 const { t } = useI18n();
+const showChart = ref(false);
 
 const hintsUsed = computed(
   () => game.hintsUsedForActiveDate,
@@ -21,7 +23,18 @@ function useHint(): void {
 </script>
 
 <template>
-  <div v-if="game.hintsRemaining > 0" class="hints">
+  <div class="hints">
+    <button
+      type="button"
+      class="hint-btn hint-btn--chart"
+      :aria-label="t('hint.chartOpen')"
+      @click="showChart = true">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z" />
+      </svg>
+    </button>
     <button
       v-for="slot in 3"
       v-show="slot > hintsUsed"
@@ -37,6 +50,7 @@ function useHint(): void {
       </svg>
     </button>
   </div>
+  <HintChartModal v-model="showChart" />
 </template>
 
 <style scoped lang="scss">
@@ -72,6 +86,18 @@ function useHint(): void {
 
   &:active {
     transform: translateY(0);
+  }
+}
+
+.hint-btn--chart {
+  color: #1a1a22;
+  background: var(--primary);
+  border-color: var(--primary);
+
+  &:hover {
+    color: #1a1a22;
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
   }
 }
 </style>

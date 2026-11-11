@@ -10,7 +10,7 @@
 
     <h3>View your games</h3>
     <p>
-      Tap <strong>Games</strong> above the hive. Every hive you have opened
+      Tap <strong>Game List</strong> above the hive. Every hive you have opened
       is listed there. The gold letter is the center letter. The numbers are
       your score out of that puzzle's maximum, with your rank underneath.
       Tap a row to switch to that hive. The &times; on the right removes the

@@ -131,10 +131,12 @@ https://blossomword.com</pre>
       <li>Try common prefixes and suffixes such as <em>-ing</em>, <em>-ed</em> and <em>-s</em>.</li>
       <li>Reuse letters: long words from few letters score the most.</li>
       <li>
-        Need a nudge? Tap a <strong>hint</strong> (💡) between the puzzle date and
-        Yesterday's Answer. You get <strong>3 hints per puzzle per day</strong>; each
-        one fills the input with the first three letters of a random word you have
-        not found yet, then that hint icon disappears.
+        Need a nudge? The <strong>yellow hint light</strong> opens a chart of first
+        letters and a two-letter list. It counts answers and does not spell them.
+        <RouterLink to="/hints">Blossom Word Game hints</RouterLink> walks through
+        one hive. The other three lights are separate: you get
+        <strong>3 per puzzle</strong>, and each fills the input with the first
+        three letters of a word you have not found yet.
       </li>
       <li>Stuck? Open the <strong>Blossom Solver</strong> to reveal every answer.</li>
     </ul>
@@ -143,7 +145,7 @@ https://blossomword.com</pre>
     <p>
       Today's hive is the one everyone shares. When you want another, open
       <RouterLink to="/unlimited">Unlimited</RouterLink>. Tap
-      <strong>Games</strong> to see the hives you have started, and
+      <strong>Game List</strong> to see the hives you have started, and
       <strong>+ New game</strong> to add one from the puzzle pool. Each game
       keeps its own score, and the list stays in your browser.
     </p>

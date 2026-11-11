@@ -37,12 +37,12 @@ export const faqs: FaqItem[] = [
   {
     question: "What is Unlimited mode?",
     answer:
-      "Unlimited lets you play more than the daily hive. Open Unlimited in the header, then tap Games to see every hive you have started. Tap + New game to add another hive from the puzzle pool. The gold letter in the list is the center letter, and the score on the right is yours for that puzzle only. Each game is saved in your browser. Share the page link if you want someone else to play the same hive.",
+      "Unlimited lets you play more than the daily hive. Open Unlimited in the header, then tap Game List to see every hive you have started. Tap + New game to add another hive from the puzzle pool. The gold letter in the list is the center letter, and the score on the right is yours for that puzzle only. Each game is saved in your browser. Share the page link if you want someone else to play the same hive.",
   },
   {
     question: "Why did you add hints?",
     answer:
-      "Many players are not native English speakers — they are learners. Three hints per puzzle lower the difficulty and help more people complete Today's Challenge. Each hint fills the input with the first three letters of a word you have not found yet. If you are an expert, you can use hints only when you are stuck, or skip them entirely.",
+      "Many players are not native English speakers — they are learners. The yellow hint light opens a chart of first letters and a two-letter list. It counts answers and does not spell them. The other three lights are separate: each one fills the input with the first three letters of a word you have not found yet, and you get three per puzzle. If you are an expert, you can skip them.",
   },
   {
     question: "What is the Blossom Solver?",

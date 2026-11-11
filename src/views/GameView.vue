@@ -208,7 +208,7 @@ watch(ready, (isReady) => {
                 type="button"
                 class="yesterday-link game-card__action--start"
                 @click="showGameList = true">
-                {{ $t("Games") }}
+                {{ $t("Game List") }}
               </button>
               <span v-else class="game-card__meta">
                 #{{ game.puzzleNo }} · {{ game.gameDateString }}
@@ -381,7 +381,7 @@ watch(ready, (isReady) => {
 
 .game-card__top {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 1fr auto 1fr;
   grid-template-areas: "meta hints yesterday";
   align-items: center;
   column-gap: 0.5rem;

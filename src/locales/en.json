@@ -2,7 +2,6 @@
   "Game": "Game",
   "Unlimited": "Unlimited",
   "Archive": "Archive",
-  "Games": "Games",
   "Game List": "Game List",
   "New game": "New game",
   "Remove game": "Remove game",
@@ -76,9 +75,13 @@
     "amazing": "Amazing",
     "awesome": "Awesome"
   },
+  "Hints": "Hints",
   "hint": {
     "use": "Use hint",
-    "noWords": "No more words to hint"
+    "noWords": "No more words to hint",
+    "chartTitle": "Hints",
+    "chartOpen": "Open the hint chart",
+    "learn": "How to read these hints"
   },
   "challenge": {
     "title": "Today's Challenge",

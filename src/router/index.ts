@@ -6,7 +6,8 @@ import AboutView from "@/views/AboutView.vue";
 import PrivacyView from "@/views/PrivacyView.vue";
 import TermsView from "@/views/TermsView.vue";
 import type { RouteSeo } from "@/utils/seo";
-import { homeJsonLd, solverJsonLd } from "@/data/structured-data";
+import { hintsJsonLd, homeJsonLd, solverJsonLd } from "@/data/structured-data";
+import HintsView from "@/views/HintsView.vue";
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -50,6 +51,22 @@ export const routes: RouteRecordRaw[] = [
         description:
           "Play a shared Blossom Word Game hive. Find the words, track your score, and send the link to a friend to play the same puzzle.",
         path: "/unlimited",
+      } satisfies RouteSeo,
+    },
+  },
+  {
+    path: "/hints",
+    name: "hints",
+    component: HintsView,
+    meta: {
+      seo: {
+        title: "Blossom Word Game Hints - How to Read the Letter Grid",
+        description:
+          "Learn Blossom Word Game hints. See how the first-letter grid and two-letter list work, using one hive as a worked example.",
+        keywords:
+          "blossom word game hints,spelling bee hints,two letter list,word puzzle hints,blossom hints",
+        path: "/hints",
+        jsonLd: hintsJsonLd(),
       } satisfies RouteSeo,
     },
   },

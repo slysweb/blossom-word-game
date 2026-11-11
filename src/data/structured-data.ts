@@ -66,6 +66,25 @@ const solverFaqs = [
   },
 ];
 
+/** Hints article. */
+export function hintsJsonLd(): object {
+  const pageUrl = `${SITE_URL}/hints`;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `${pageUrl}#article`,
+    headline: "Blossom Word Game Hints",
+    description:
+      "How to read Blossom Word Game hints: the first-letter grid and the two-letter list, explained with one example hive.",
+    url: pageUrl,
+    mainEntityOfPage: pageUrl,
+    image: `${SITE_URL}/og.png`,
+    author: { "@type": "Organization", name: "Blossom Word Game" },
+    publisher: { "@id": WEBSITE_ID },
+    inLanguage: "en",
+  };
+}
+
 /** Solver page: tool app + page metadata + solver FAQ. */
 export function solverJsonLd(): object {
   const pageUrl = `${SITE_URL}/solver`;
