@@ -90,6 +90,12 @@
     <ul>
       <li>Ranks are based on the percentage of possible points in a puzzle.</li>
       <li>Tap the progress bar to see the score needed for each rank today.</li>
+      <li>
+        Tap <strong>Stats</strong> in the header for every game you have
+        played: how many reached Genius, your daily streak, pangrams, average
+        score, and high score, plus how many Today's Challenges you finished
+        and the consecutive days you completed them.
+      </li>
     </ul>
 
     <h3>Sharing your result</h3>

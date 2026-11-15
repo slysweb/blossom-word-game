@@ -1,9 +1,21 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { useRoute } from "vue-router";
 import { useThemeStore } from "@/stores/theme";
+import { useSoundStore } from "@/stores/sound";
+import { useGameStore } from "@/stores/game";
+import StatsModal from "@/components/StatsModal.vue";
 
 const theme = useThemeStore();
+const sound = useSoundStore();
+const game = useGameStore();
 const route = useRoute();
+const showStats = ref(false);
+
+function openStats(): void {
+  showStats.value = true;
+  void game.ensureLoaded();
+}
 </script>
 
 <template>
@@ -27,6 +39,25 @@ const route = useRoute();
         </RouterLink>
         <RouterLink to="/archive">{{ $t("Archive") }}</RouterLink>
         <RouterLink to="/solver">{{ $t("Blossom Solver") }}</RouterLink>
+        <button type="button" class="nav-btn" @click="openStats">
+          {{ $t("Stats") }}
+        </button>
+        <button
+          class="theme-toggle"
+          :aria-label="sound.enabled ? $t('sound.mute') : $t('sound.unmute')"
+          :aria-pressed="sound.enabled"
+          @click="sound.toggle()">
+          <svg v-if="sound.enabled" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M3 10v4h4l5 5V5L7 10H3zm13.5 2a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z" />
+          </svg>
+          <svg v-else viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M16.5 12a4.5 4.5 0 0 0-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.96 8.96 0 0 0 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 0 0 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z" />
+          </svg>
+        </button>
         <button
           class="theme-toggle"
           :aria-label="theme.isDark ? 'Switch to light mode' : 'Switch to dark mode'"
@@ -36,6 +67,7 @@ const route = useRoute();
       </nav>
     </div>
   </header>
+  <StatsModal v-model="showStats" />
 </template>
 
 <style scoped lang="scss">
@@ -86,7 +118,8 @@ const route = useRoute();
   align-items: center;
 }
 
-.nav a {
+.nav a,
+.nav-btn {
   color: var(--text);
   text-decoration: none;
   padding: 0.5rem 0.9rem;
@@ -99,17 +132,28 @@ const route = useRoute();
     background: var(--primary-soft);
     transform: translateY(-1px);
   }
+}
 
-  &.router-link-exact-active {
-    color: #000;
-    background: var(--primary);
-    box-shadow: 0 2px 8px var(--primary-soft);
-  }
+.nav a.router-link-exact-active {
+  color: #000;
+  background: var(--primary);
+  box-shadow: 0 2px 8px var(--primary-soft);
+}
+
+.nav-btn {
+  background: transparent;
+  border: none;
+  line-height: inherit;
 }
 
 .theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 42px;
   height: 42px;
+  padding: 0;
+  color: var(--text);
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 999px;

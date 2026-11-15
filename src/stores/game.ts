@@ -19,6 +19,7 @@ import {
 import { maxScoreFor, rankIndexFor, scoreFor, scoreLevelsFor } from "@/utils/score";
 import { SITE_URL } from "@/utils/seo";
 import { buildChallengeState } from "@/utils/dailyChallenge";
+import { useSoundStore } from "@/stores/sound";
 import type { Puzzle } from "@/types/puzzle";
 
 const PROGRESS_PERCENTAGES = [0, 20, 40, 50, 60, 70, 80, 90, 100];
@@ -280,18 +281,30 @@ export const useGameStore = defineStore("game", () => {
   }
 
   function submitGuess(guess: string): void {
+    const sound = useSoundStore();
     const word = guess.toLowerCase();
-    if (word.length < 4) return toast.show(t("too short"));
+    if (word.length < 4) {
+      sound.play("error");
+      return toast.show(t("too short"));
+    }
     if (!word.includes(middleLetter.value)) {
+      sound.play("error");
       return toast.show(t("missing middle letter"));
     }
     if (!answers.value.includes(word)) {
+      sound.play("error");
       return toast.show(t("not in word list"));
     }
     const found = correctGuessesList.value;
-    if (found.includes(word)) return toast.show(t("already found"));
+    if (found.includes(word)) {
+      sound.play("error");
+      return toast.show(t("already found"));
+    }
 
+    const litBefore = dailyChallenge.value?.litCount ?? 0;
     saveFound([...found, word]);
+    const bloomed = (dailyChallenge.value?.litCount ?? 0) > litBefore;
+    sound.play(bloomed ? "bloom" : "correct");
 
     const points = calculatePoints(word);
     if (isPangram(word)) {
@@ -443,6 +456,7 @@ export const useGameStore = defineStore("game", () => {
   return {
     puzzles,
     progress,
+    unlimitedProgress,
     isLoaded,
     activeDate,
     isToday,

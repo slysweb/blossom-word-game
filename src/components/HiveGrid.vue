@@ -2,10 +2,12 @@
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useGameStore } from "@/stores/game";
 import { useThemeStore } from "@/stores/theme";
+import { useSoundStore } from "@/stores/sound";
 import { shuffle } from "@/utils/array";
 
 const game = useGameStore();
 const theme = useThemeStore();
+const sound = useSoundStore();
 
 const strokeColor = computed(() => (theme.isDark ? "#1c1b22" : "#ffffff"));
 
@@ -45,6 +47,7 @@ watch(
 
 function addLetter(letter: string): void {
   userGuess.value += letter;
+  sound.play("type");
 }
 
 function deleteLetter(): void {
@@ -65,7 +68,7 @@ function onKeyup(e: KeyboardEvent): void {
   if (key === "enter") return submit();
   if (key === "backspace" || key === "delete") return deleteLetter();
   if (key.length === 1 && game.availableLetters.includes(key)) {
-    userGuess.value += key;
+    addLetter(key);
   }
 }
 

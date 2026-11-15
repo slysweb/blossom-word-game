@@ -8,9 +8,11 @@ const showRanking = ref(false);
 </script>
 
 <template>
-  <div class="progress" @click="showRanking = true" title="View ranking">
-    <span class="rank">{{ $t(`rank.${game.progressIndex}`) }}</span>
-    <div class="bar">
+  <div class="progress">
+    <button type="button" class="rank" @click="showRanking = true">
+      {{ $t(`rank.${game.progressIndex}`) }}
+    </button>
+    <div class="bar" title="View ranking" @click="showRanking = true">
       <div class="bar__track">
         <div class="bar__fill" :style="{ width: `${game.progressPercentage}%` }" />
       </div>
@@ -31,7 +33,6 @@ const showRanking = ref(false);
 <style scoped lang="scss">
 .progress {
   margin: 20px 10px 10px;
-  cursor: pointer;
 }
 
 .rank {
@@ -41,16 +42,20 @@ const showRanking = ref(false);
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.95rem;
+  line-height: 1.2;
   color: #1a1a22;
   background: var(--primary);
+  border: none;
   border-radius: 999px;
   box-shadow: 0 2px 8px var(--primary-soft);
+  cursor: pointer;
 }
 
 .bar {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  cursor: pointer;
 }
 
 .bar__track {

@@ -18,6 +18,25 @@
   "Toggle case": "Toggle letter case",
   "Type or click": "Type or click",
   "Ranking": "Ranking",
+  "Stats": "Stats",
+  "sound": {
+    "mute": "Turn sound off",
+    "unmute": "Turn sound on"
+  },
+  "stats": {
+    "allGames": "All games",
+    "played": "Played",
+    "solved": "Solved",
+    "streak": "Current streak",
+    "pangrams": "Pangrams",
+    "avgScore": "Avg. score",
+    "highScore": "High score",
+    "note": "A game counts after you find a word. Solved means Genius. The streak is consecutive daily Genius ranks.",
+    "challenge": "Today's Challenge",
+    "challengeCompleted": "Completed",
+    "challengeStreak": "Day streak",
+    "challengeNote": "Completed means every flower bloomed. The streak is consecutive days you finished Today's Challenge."
+  },
   "RankMSG": "Ranks are based on a percentage of possible points in a puzzle. The minimum scores to reach each rank for today's puzzle are",
   "foundWords": "You have found 0 words | You have found 1 word | You have found {n} words",
   "Your words": "Your words",
